@@ -128,16 +128,33 @@ class DiaryApiController extends Controller
 
     public function wanted($id)
     {
-        if(Diary::where('id', $id)->exists())
-        {
-            return Diary::find($id);
-        }
-        else{
-            return response()->json([
-                "message" => "Diary not found"
-            ], 404);
-        }
+         $isGuest = auth()->guest();
 
+        if (!$isGuest) {
+
+            $user_id = auth()->user()->id;
+            $user_role = auth()->user()->role;
+            $diary = Diary::find($id);
+
+            if ($user_id == $diary->user_id || $user_role == 1) {
+
+                if (Diary::where('id', $id)->exists()) {
+                    return Diary::find($id);
+                } 
+                else {
+                    return response()->json([
+                        "message" => "Dairy not found",
+                    ], 404);
+                }
+            }
+            else {
+                return response()
+                    ->json(["message" => "Unauthorized"], 401);
+            }
+        } 
+        else {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
     
 }

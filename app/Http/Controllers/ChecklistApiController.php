@@ -126,15 +126,32 @@ class ChecklistApiController extends Controller
 
     public function wanted($id)
     {
-        if(Checklist::where('id', $id)->exists())
-        {
-            return Checklist::find($id);
-        }
-        else{
-            return response()->json([
-                "message" => "Checklist not found"
-            ], 404);
-        }
+        $isGuest = auth()->guest();
 
+        if (!$isGuest) {
+
+            $user_id = auth()->user()->id;
+            $user_role = auth()->user()->role;
+            $checklist = Checklist::find($id);
+
+            if ($user_id == $checklist->user_id || $user_role == 1) {
+
+                if (Checklist::where('id', $id)->exists()) {
+                    return Checklist::find($id);
+                } 
+                else {
+                    return response()->json([
+                        "message" => "Checklist not found",
+                    ], 404);
+                }
+            }
+            else {
+                return response()
+                    ->json(["message" => "Unauthorized"], 401);
+            }
+        } 
+        else {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 }

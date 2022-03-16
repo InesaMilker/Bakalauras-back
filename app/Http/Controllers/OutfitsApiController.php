@@ -128,16 +128,33 @@ class OutfitsApiController extends Controller
 
     public function wanted($id)
     {
-        if(Outfit::where('id', $id)->exists())
-        {
-            return Outfit::find($id);
-        }
-        else{
-            return response()->json([
-                "message" => "Outfit not found"
-            ], 404);
-        }
+        $isGuest = auth()->guest();
 
+        if (!$isGuest) {
+
+            $user_id = auth()->user()->id;
+            $user_role = auth()->user()->role;
+            $outfit = Outfit::find($id);
+
+            if ($user_id == $outfit->user_id || $user_role == 1) {
+
+                if (Outfit::where('id', $id)->exists()) {
+                    return Outfit::find($id);
+                } 
+                else {
+                    return response()->json([
+                        "message" => "Outfit not found",
+                    ], 404);
+                }
+            }
+            else {
+                return response()
+                    ->json(["message" => "Unauthorized"], 401);
+            }
+        } 
+        else {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 }
 

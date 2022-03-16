@@ -12,7 +12,7 @@ class CoordinatesApiController extends Controller
     {
         return Coordinates::all();
     }
-
+/*
     public function store()
     {
 
@@ -139,4 +139,5 @@ class CoordinatesApiController extends Controller
         }
 
     }
+    */
 }

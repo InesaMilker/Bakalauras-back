@@ -1,16 +1,11 @@
 <?php
-use App\Models\Trips;
-use App\Models\Outfit;
-use App\Models\Diary;
-use App\Models\Checklist;
-
-use App\Http\Controllers\TripsApiController;
-use App\Http\Controllers\OutfitsApiController;
-use App\Http\Controllers\ChecklistApiController;
-use App\Http\Controllers\DiaryApiController;
-use App\Http\Controllers\CoordinatesApiController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\ChecklistApiController;
+use App\Http\Controllers\CoordinatesApiController;
+use App\Http\Controllers\DiaryApiController;
+use App\Http\Controllers\OutfitsApiController;
+use App\Http\Controllers\TripsApiController;
+use App\Http\Controllers\DayApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -31,7 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth'
+    'prefix' => 'auth',
 
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
@@ -42,40 +37,30 @@ Route::group([
 });
 
 Route::get('/outfits', [OutfitsApiController::class, 'index']);
-
 Route::post('/outfits', [OutfitsApiController::class, 'store']);
-
 Route::put('/outfits/{id}', [OutfitsApiController::class, 'update']);
-
 Route::delete('/outfits/{id}', [OutfitsApiController::class, 'destroy']);
-
 Route::get('/outfits/{id}', [OutfitsApiController::class, 'wanted']);
 
-
 Route::get('/diary', [DiaryApiController::class, 'index']);
-
 Route::post('/diary', [DiaryApiController::class, 'store']);
-
 Route::put('/diary/{id}', [DiaryApiController::class, 'update']);
-
 Route::delete('/diary/{id}', [DiaryApiController::class, 'destroy']);
-
 Route::get('/diary/{id}', [DiaryApiController::class, 'wanted']);
-
 
 Route::get('/coordinates', [CoordinatesApiController::class, 'index']);
 
-
 Route::get('/checklist', [ChecklistApiController::class, 'index']);
-
 Route::post('/checklist', [ChecklistApiController::class, 'store']);
-
 Route::put('/checklist/{id}', [ChecklistApiController::class, 'update']);
-
 Route::delete('/checklist/{id}', [ChecklistApiController::class, 'destroy']);
-
 Route::get('/checklist/{id}', [ChecklistApiController::class, 'wanted']);
 
-
+Route::get('/day', [DayApiController::class, 'index']);
+Route::post('/day', [DayApiController::class, 'store']);
 
 Route::get('/trips', [TripsApiController::class, 'index']);
+Route::post('/trips', [TripsApiController::class, 'store']);
+Route::put('/trips/{id}', [TripsApiController::class, 'update']);
+Route::delete('/trips/{id}', [TripsApiController::class, 'destroy']);
+Route::get('/trips/{id}', [TripsApiController::class, 'wanted']);
