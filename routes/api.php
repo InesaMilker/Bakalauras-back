@@ -49,6 +49,10 @@ Route::delete('/diary/{id}', [DiaryApiController::class, 'destroy']);
 Route::get('/diary/{id}', [DiaryApiController::class, 'wanted']);
 
 Route::get('/coordinates', [CoordinatesApiController::class, 'index']);
+Route::post('/coordinates', [CoordinatesApiController::class, 'store']);
+Route::put('/coordinates/{id}', [CoordinatesApiController::class, 'update']);
+Route::delete('/coordinates/{id}', [CoordinatesApiController::class, 'destroy']);
+Route::get('/coordinates/{id}', [CoordinatesApiController::class, 'wanted']);
 
 Route::get('/checklist', [ChecklistApiController::class, 'index']);
 Route::post('/checklist', [ChecklistApiController::class, 'store']);
@@ -58,6 +62,9 @@ Route::get('/checklist/{id}', [ChecklistApiController::class, 'wanted']);
 
 Route::get('/day', [DayApiController::class, 'index']);
 Route::post('/day', [DayApiController::class, 'store']);
+Route::put('/day/{id}', [DayApiController::class, 'update']);
+Route::delete('/day/{id}', [DayApiController::class, 'destroy']);
+Route::get('/day/{id}', [DayApiController::class, 'wanted']);
 
 Route::get('/trips', [TripsApiController::class, 'index']);
 Route::post('/trips', [TripsApiController::class, 'store']);
