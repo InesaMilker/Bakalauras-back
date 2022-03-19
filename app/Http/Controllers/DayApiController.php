@@ -18,6 +18,7 @@ class DayApiController extends Controller
         $isGuest = auth()->guest();
 
         if (!$isGuest) {
+
             if (Trips::where('id', request('trip_id'))->exists()) {
                 return Day::create(['day_number' => request('day_number'), 'trip_id' => request('trip_id'), 'budget' => request('budget'), 'note' => request('note'),]);
             } 
@@ -87,9 +88,7 @@ class DayApiController extends Controller
         $isGuest = auth()->guest();
 
         if (!$isGuest) 
-        {
-            $day = Day::find($id);
-            
+        {            
             if(Day::where('id', $id)->exists())
             {
                 return Day::find($id);
