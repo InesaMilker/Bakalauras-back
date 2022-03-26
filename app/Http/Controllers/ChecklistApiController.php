@@ -60,7 +60,7 @@ class ChecklistApiController extends Controller
                     $checklist->user_id = $checklist->user_id;
                     $checklist->save();
 
-                    return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 401);
+                    return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 200);
                 }
                 else
                 {
