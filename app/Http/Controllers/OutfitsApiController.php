@@ -34,13 +34,19 @@ class OutfitsApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image'=>request('outfit_image'), 'user_id' => $user_id, ]);
+            // if($request->hasFile('image')) {
+            //     $image = $request->file('image');
+            //     $filename = time().rand(1,3). '.'.$image->getClientOriginalName();
+            //     $image->move('uploads/', $filename);
+
+            //     return Outfit::create(['outfit_name' => request('outfit_name'), 'image_name' => $filename, 'user_id' => $user_id,]);
+            // }
+            return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image'=>request('outfit_image'), 'user_id' => $user_id, ]); 
         }
         else
         {
             return response()->json(["message" => "Unauthorized"], 401);
         }
-        //return auth()->guest();
     }
 
     public function update(Request $request, $id)
