@@ -10,7 +10,17 @@ class DayApiController extends Controller
 {
     public function index()
     {
-        return Day::all();
+        $isGuest = auth()->guest();
+        
+        if(!$isGuest)
+        {
+            $user_id = auth()->user()->id;
+            return Day::where('user_id', $user_id)->get();
+        }
+        else
+        {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 
     public function store()

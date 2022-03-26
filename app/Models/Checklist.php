@@ -9,6 +9,6 @@ class Checklist extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'text', 'user_id'
+        'state', 'text', 'user_id'
     ];
 }

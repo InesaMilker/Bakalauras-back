@@ -10,7 +10,17 @@ class CoordinatesApiController extends Controller
 {
     public function index()
     {
-        return Coordinates::all();
+        $isGuest = auth()->guest();
+        
+        if(!$isGuest)
+        {
+            $user_id = auth()->user()->id;
+            return Coordinates::where('user_id', $user_id)->get();
+        }
+        else
+        {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 
     public function store()

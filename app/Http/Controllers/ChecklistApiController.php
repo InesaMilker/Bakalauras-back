@@ -10,13 +10,22 @@ class ChecklistApiController extends Controller
 {
     public function index()
     {
-        return Checklist::all();
+        $isGuest = auth()->guest();
+        
+        if(!$isGuest)
+        {
+            $user_id = auth()->user()->id;
+            return Checklist::where('user_id', $user_id)->get();
+        }
+        else
+        {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 
     public function store()
     {
-
-        request()->validate(['text' => 'required',]);
+        request()->validate(['state' => 'required', 'text' => 'required',]);
         
         $isGuest = auth()->guest();
         
@@ -24,7 +33,7 @@ class ChecklistApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            return Checklist::create(['text' => request('text'), 'user_id' => $user_id, ]);
+            return Checklist::create(['state' => request('state'), 'text' => request('text'), 'user_id' => $user_id, ]);
         }
         else
         {
@@ -45,15 +54,16 @@ class ChecklistApiController extends Controller
 
                 if(Checklist::where('id', $id)->exists())
                 {
-                    $ckecklist = Checklist::find($id);
+                    $checklist = Checklist::find($id);
 
-                    if($user_id == $ckecklist->user_id || $user_role == 1)
+                    if($user_id == $checklist->user_id || $user_role == 1)
                     {
-                        $ckecklist->text = is_null($request->text) ? $ckecklist->text : $request->text;
-                        $ckecklist->user_id = $ckecklist->user_id;
-                        $ckecklist->save();
+                        $checklist->state = $request->state;
+                        $checklist->text = is_null($request->text) ? $checklist->text : $request->text;
+                        $checklist->user_id = $checklist->user_id;
+                        $checklist->save();
 
-                        return response()->json(["message" => "Ckecklist updated successfully", "ckecklist" => $ckecklist], 401);
+                        return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 401);
                     }
                     else
                     {
@@ -63,7 +73,7 @@ class ChecklistApiController extends Controller
                 else
                 {
                     return response()
-                        ->json(["message" => "Ckecklist not found"], 404);
+                        ->json(["message" => "Checklist not found"], 404);
                 }           
             }
             else
@@ -74,7 +84,7 @@ class ChecklistApiController extends Controller
         }
         else
         {
-            return response()->json(["message" => "Ckecklist not found"], 404);
+            return response()->json(["message" => "Checklist not found"], 404);
         }
     }
 
@@ -101,7 +111,7 @@ class ChecklistApiController extends Controller
                     $checklist->delete();
 
                     return response()
-                        ->json(["message" => "checklist deleted"], 202);
+                        ->json(["message" => "Checklist deleted"], 202);
                 }
 
                 else
@@ -114,7 +124,7 @@ class ChecklistApiController extends Controller
             else
             {
                 return response()
-                    ->json(["message" => "checklist not found"], 404);
+                    ->json(["message" => "Checklist not found"], 404);
             }
         }
         else

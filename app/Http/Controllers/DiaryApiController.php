@@ -10,7 +10,17 @@ class DiaryApiController extends Controller
 {
     public function index()
     {
-        return Diary::all();
+        $isGuest = auth()->guest();
+        
+        if(!$isGuest)
+        {
+            $user_id = auth()->user()->id;
+            return Diary::where('user_id', $user_id)->get();
+        }
+        else
+        {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
     }
 
     public function store()
