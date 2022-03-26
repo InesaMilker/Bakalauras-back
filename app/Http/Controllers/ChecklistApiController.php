@@ -25,7 +25,7 @@ class ChecklistApiController extends Controller
 
     public function store()
     {
-        request()->validate(['state' => 'required', 'text' => 'required',]);
+        request()->validate([ 'text' => 'required',]);
         
         $isGuest = auth()->guest();
         
@@ -33,7 +33,7 @@ class ChecklistApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            return Checklist::create(['state' => request('state'), 'text' => request('text'), 'user_id' => $user_id, ]);
+            return Checklist::create([ 'text' => request('text'), 'user_id' => $user_id, ]);
         }
         else
         {
