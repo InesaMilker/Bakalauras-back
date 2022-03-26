@@ -51,30 +51,21 @@ class ChecklistApiController extends Controller
             {
                 $user_id=auth()->user()->id;
                 $user_role = auth()->user()->role;
+                $checklist = Checklist::find($id);
 
-                if(Checklist::where('id', $id)->exists())
+                if($user_id == $checklist->user_id || $user_role == 1)
                 {
-                    $checklist = Checklist::find($id);
+                    $checklist->state = is_null($request->state) ? $checklist->state : $request->state;
+                    $checklist->text = is_null($request->text) ? $checklist->text : $request->text;
+                    $checklist->user_id = $checklist->user_id;
+                    $checklist->save();
 
-                    if($user_id == $checklist->user_id || $user_role == 1)
-                    {
-                        $checklist->state = $request->state;
-                        $checklist->text = is_null($request->text) ? $checklist->text : $request->text;
-                        $checklist->user_id = $checklist->user_id;
-                        $checklist->save();
-
-                        return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 401);
-                    }
-                    else
-                    {
-                        return response()->json(["message" => "Unauthorized"], 401);
-                    }
+                    return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 401);
                 }
                 else
                 {
-                    return response()
-                        ->json(["message" => "Checklist not found"], 404);
-                }           
+                    return response()->json(["message" => "Unauthorized"], 401);
+                }         
             }
             else
             {
