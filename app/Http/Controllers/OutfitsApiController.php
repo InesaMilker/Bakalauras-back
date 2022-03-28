@@ -23,7 +23,7 @@ class OutfitsApiController extends Controller
         };
     }
 
-    public function store()
+    public function store(Request $request)
     {
 
         request()->validate(['outfit_name' => 'required', 'outfit_image' => 'required',]);
@@ -34,14 +34,14 @@ class OutfitsApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            // if($request->hasFile('image')) {
-            //     $image = $request->file('image');
-            //     $filename = time().rand(1,3). '.'.$image->getClientOriginalName();
-            //     $image->move('uploads/', $filename);
+            if($request->hasFile('outfit_image')) {
+                $image = $request->file('outfit_image');
+                $filename = time().rand(1,3). '.'.$image->getClientOriginalName();
+                $image->move('uploads/', $filename);
 
-            //     return Outfit::create(['outfit_name' => request('outfit_name'), 'image_name' => $filename, 'user_id' => $user_id,]);
-            // }
-            return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image'=>request('outfit_image'), 'user_id' => $user_id, ]); 
+                return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image' => $filename, 'user_id' => $user_id,]);
+            }
+            return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image'=>"", 'user_id' => $user_id, ]); 
         }
         else
         {
@@ -173,4 +173,3 @@ class OutfitsApiController extends Controller
         }
     }
 }
-
