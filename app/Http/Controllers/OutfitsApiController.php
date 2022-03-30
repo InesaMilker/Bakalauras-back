@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Outfit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OutfitsApiController extends Controller
 {

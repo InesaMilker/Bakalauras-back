@@ -89,6 +89,7 @@ class AuthController extends Controller
         Outfit::where('user_id', $user_id)->delete();
 
         $user->delete();
+        
         if($user->delete()){
             return response()->json(['success'], 200);
         }
