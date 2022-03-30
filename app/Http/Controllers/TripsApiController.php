@@ -54,6 +54,7 @@ class TripsApiController extends Controller
                         $trips->title = is_null($request->title) ? $trips->title : $request->title;
                         $trips->start_date = is_null($request->start_date) ? $trips->start_date : $request->start_date;
                         $trips->end_date = is_null($request->end_date) ? $trips->end_date : $request->end_date;
+                        $trips->rating = is_null($request->rating) ? $trips->rating : $request->rating;
                         $trips->user_id = $trips->user_id;
                         $trips->save();
 
