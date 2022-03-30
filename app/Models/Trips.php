@@ -9,6 +9,6 @@ class Trips extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'title', 'start_date', 'end_date', 'user_id'
+        'title', 'start_date', 'end_date', 'rating', 'user_id'
     ];
 }

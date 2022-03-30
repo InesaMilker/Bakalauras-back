@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Trips;
 use Illuminate\Http\Request;
 
+
 class TripsApiController extends Controller
 {
     public function index()
@@ -40,6 +41,8 @@ class TripsApiController extends Controller
 
     public function update(Request $request, $id)
     {
+        request()->validate(['rating' => 'numeric|between:1,8', ]);
+
         if (Trips::where('id', $id)->exists()) {
             $isGuest = auth()->guest();
 
