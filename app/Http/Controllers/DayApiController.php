@@ -26,12 +26,13 @@ class DayApiController extends Controller
     public function store()
     {
         $isGuest = auth()->guest();
+        $user_id = auth()->user()->id;
 
         if (!$isGuest) 
         {
-            $user_id = auth()->user()->id;
+            //$trip = Trips::find($user_id);
 
-            if (Trips::where('id', request('trip_id'))->exists()) 
+            if (Trips::where('id', request('trip_id'))->first()->user_id == $user_id) 
             {
                 return Day::create(['day_number' => request('day_number'), 'trip_id' => request('trip_id'), 'budget' => request('budget'), 'note' => request('note'), 'user_id' => $user_id]);
             } 

@@ -20,6 +20,8 @@ class CreateCoordinatesTable extends Migration
             $table->double('lng');
             $table->foreignId('day_id');
             $table->foreign('day_id')->references('id')->on('days')->onDelete('cascade');
+            $table->foreignId('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

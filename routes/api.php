@@ -34,8 +34,10 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/me', [AuthController::class, 'me']);
+    // Route::delete('/delete',  [AuthController::class, 'destroy']);
 });
 
+Route::delete('/delete',  [AuthController::class, 'destroy']);
 Route::get('/outfits', [OutfitsApiController::class, 'index']);
 Route::post('/outfits', [OutfitsApiController::class, 'store']);
 Route::put('/outfits/{id}', [OutfitsApiController::class, 'update']);

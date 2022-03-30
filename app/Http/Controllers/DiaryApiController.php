@@ -35,7 +35,7 @@ class DiaryApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            if (Trips::where('id', request('trip_id'))->exists()) 
+            if (Trips::where('id', request('trip_id'))->first()->user_id == $user_id) 
             {
                 return Diary::create(['title' => request('title'), 'content'=>request('content'), 'user_id' => $user_id, 'trip_id' => request('trip_id'), ]);
             } 

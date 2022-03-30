@@ -1,10 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Coordinates;
+use App\Models\Day;
+use App\Models\Trips;
+use App\Models\Diary;
+use App\Models\Outfit;
+use App\Models\Checklist;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-
 
 class AuthController extends Controller
 {
@@ -42,8 +47,7 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        return $this->respondWithToken(auth()
-            ->refresh());
+        return $this->respondWithToken(auth()->refresh());
     }
 
     public function me()
@@ -70,5 +74,23 @@ class AuthController extends Controller
 
         return response()
             ->json(['message' => 'User successfully registered', 'user' => $user], 201);
+    }
+
+    public function destroy()
+    {
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+
+        Coordinates::where('user_id', $user_id)->delete();
+        Day::where('user_id', $user_id)->delete();
+        Diary::where('user_id', $user_id)->delete();
+        Trips::where('user_id', $user_id)->delete();
+        Checklist::where('user_id', $user_id)->delete();
+        Outfit::where('user_id', $user_id)->delete();
+
+        $user->delete();
+        if($user->delete()){
+            return response()->json(['success'], 200);
+        }
     }
 }

@@ -9,6 +9,6 @@ class Coordinates extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'location_name', 'lat', 'lng', 'day_id'
+        'location_name', 'lat', 'lng', 'day_id', 'user_id'
     ];
 }
