@@ -18,6 +18,7 @@ class CreateTripsTable extends Migration
             $table->string('title');
             $table->date('start_date');
             $table->date('end_date');
+            $table->integer('rating')->nullable();
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
