@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Diary;
 use Illuminate\Http\Request;
+use App\Models\Trips;
 use Illuminate\Support\Facades\Auth;
 
 class DiaryApiController extends Controller
@@ -34,7 +35,14 @@ class DiaryApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            return Diary::create(['title' => request('title'), 'content'=>request('content'), 'user_id' => $user_id, ]);
+            if (Trips::where('id', request('trip_id'))->exists()) 
+            {
+                return Diary::create(['title' => request('title'), 'content'=>request('content'), 'user_id' => $user_id, 'trip_id' => request('trip_id'), ]);
+            } 
+            else 
+            {
+                return response()->json(["message" => "Trip not found"], 404);
+            }
         }
         else
         {
@@ -45,8 +53,6 @@ class DiaryApiController extends Controller
 
     public function update(Request $request, $id)
     {
-        if(Diary::where('id', $id)->exists())
-        {
             $isGuest = auth()->guest();
 
             if(!$isGuest)
@@ -83,11 +89,7 @@ class DiaryApiController extends Controller
                 return response()
                     ->json(["message" => "Unauthorized"], 401);
             }
-        }
-        else
-        {
-            return response()->json(["message" => "Diary not found"], 404);
-        }
+
     }
 
     

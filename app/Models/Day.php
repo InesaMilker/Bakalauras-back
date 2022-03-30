@@ -9,6 +9,6 @@ class Day extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'day_number', 'trip_id', 'budget', 'note'
+        'day_number', 'user_id', 'trip_id', 'budget', 'note'
     ];
 }

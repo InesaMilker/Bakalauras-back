@@ -34,7 +34,8 @@ class TripsApiController extends Controller
 
             return Trips::create(['title' => request('title'), 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'user_id' => $user_id]);
         } 
-        else {
+        else 
+        {
             return response()->json(["message" => "Unauthorized"], 401);
         }
     }
@@ -43,14 +44,17 @@ class TripsApiController extends Controller
     {
         request()->validate(['rating' => 'numeric|between:1,8', ]);
 
-        if (Trips::where('id', $id)->exists()) {
+        if (Trips::where('id', $id)->exists()) 
+        {
             $isGuest = auth()->guest();
 
-            if (!$isGuest) {
+            if (!$isGuest) 
+            {
                 $user_id = auth()->user()->id;
                 $user_role = auth()->user()->role;
 
-                if (Trips::where('id', $id)->exists()) {
+                if (Trips::where('id', $id)->exists())
+                {
                     $trips = Trips::find($id);
 
                     if ($user_id == $trips->user_id || $user_role == 1) {
@@ -62,18 +66,27 @@ class TripsApiController extends Controller
                         $trips->save();
 
                         return response()->json(["message" => "Trip updated successfully", "outfit" => $trips], 401);
-                    } else {
+                    } 
+                    
+                    else 
+                    {
                         return response()->json(["message" => "Unauthorized"], 401);
                     }
-                } else {
+                } 
+                
+                else 
+                {
                     return response()
                         ->json(["message" => "Trip not found"], 404);
                 }
-            } else {
+            } else 
+            {
                 return response()
                     ->json(["message" => "Unauthorized"], 401);
             }
-        } else {
+        } 
+        else 
+        {
             return response()->json(["message" => "Trip not found"], 404);
         }
     }
