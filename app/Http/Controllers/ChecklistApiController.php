@@ -33,7 +33,8 @@ class ChecklistApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            return Checklist::create([ 'text' => request('text'), 'user_id' => $user_id, ]);
+            return Checklist::create([ 'text' => request('text'),
+             'user_id' => $user_id, ]);
         }
         else
         {
@@ -55,16 +56,21 @@ class ChecklistApiController extends Controller
 
                 if($user_id == $checklist->user_id || $user_role == 1)
                 {
-                    $checklist->state = is_null($request->state) ? $checklist->state : $request->state;
-                    $checklist->text = is_null($request->text) ? $checklist->text : $request->text;
+                    $checklist->state = is_null($request->state)
+                     ? $checklist->state : $request->state;
+                    $checklist->text = is_null($request->text)
+                     ? $checklist->text : $request->text;
                     $checklist->user_id = $checklist->user_id;
                     $checklist->save();
 
-                    return response()->json(["message" => "Checklist updated successfully", "ckecklist" => $checklist], 200);
+                    return response()
+                    ->json(["message" => "Checklist updated successfully",
+                     "ckecklist" => $checklist], 200);
                 }
                 else
                 {
-                    return response()->json(["message" => "Unauthorized"], 401);
+                    return response()
+                    ->json(["message" => "Unauthorized"], 401);
                 }         
             }
             else
@@ -95,7 +101,6 @@ class ChecklistApiController extends Controller
 
                 $checklist = Checklist::find($id);
 
-                //Checks if its current users post or its an admin trying to delete.
                 if ($user_id == $checklist->user_id || $user_role == 1)
                 {
 

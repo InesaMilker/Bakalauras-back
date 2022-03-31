@@ -25,14 +25,17 @@ class TripsApiController extends Controller
 
     public function store()
     {
-        request()->validate(['title' => 'required', 'start_date' => 'required', 'end_date' => 'required']);
+        request()->validate(['title' => 'required', 
+        'start_date' => 'required', 'end_date' => 'required']);
 
         $isGuest = auth()->guest();
 
         if (!$isGuest) {
             $user_id = auth()->user()->id;
 
-            return Trips::create(['title' => request('title'), 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'user_id' => $user_id]);
+            return Trips::create(['title' => request('title'),
+             'start_date' => request('start_date'), 
+             'end_date' => request('end_date'), 'user_id' => $user_id]);
         } 
         else 
         {
@@ -58,14 +61,19 @@ class TripsApiController extends Controller
                     $trips = Trips::find($id);
 
                     if ($user_id == $trips->user_id || $user_role == 1) {
-                        $trips->title = is_null($request->title) ? $trips->title : $request->title;
-                        $trips->start_date = is_null($request->start_date) ? $trips->start_date : $request->start_date;
-                        $trips->end_date = is_null($request->end_date) ? $trips->end_date : $request->end_date;
-                        $trips->rating = is_null($request->rating) ? $trips->rating : $request->rating;
+                        $trips->title = is_null($request->title) 
+                        ? $trips->title : $request->title;
+                        $trips->start_date = is_null($request->start_date) 
+                        ? $trips->start_date : $request->start_date;
+                        $trips->end_date = is_null($request->end_date) 
+                        ? $trips->end_date : $request->end_date;
+                        $trips->rating = is_null($request->rating) 
+                        ? $trips->rating : $request->rating;
                         $trips->user_id = $trips->user_id;
                         $trips->save();
 
-                        return response()->json(["message" => "Trip updated successfully", "outfit" => $trips], 401);
+                        return response()
+                        ->json(["message" => "Trip updated successfully", "outfit" => $trips], 401);
                     } 
                     
                     else 
@@ -104,7 +112,6 @@ class TripsApiController extends Controller
 
                 $trips = Trips::find($id);
 
-                //Checks if its current users post or its an admin trying to delete.
                 if ($user_id == $trips->user_id || $user_role == 1) {
 
                     $trips->delete();

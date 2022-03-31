@@ -35,9 +35,12 @@ class DiaryApiController extends Controller
         {
             $user_id = auth()->user()->id;
 
-            if (Trips::where('id', request('trip_id'))->first()->user_id == $user_id) 
+            if (Trips::where('id', request('trip_id'))
+            ->first()->user_id == $user_id) 
             {
-                return Diary::create(['title' => request('title'), 'content'=>request('content'), 'user_id' => $user_id, 'trip_id' => request('trip_id'), ]);
+                return Diary::create(['title' => request('title'), 
+                'content'=>request('content'), 'user_id' => $user_id, 
+                'trip_id' => request('trip_id'), ]);
             } 
             else 
             {
@@ -66,16 +69,21 @@ class DiaryApiController extends Controller
 
                     if($user_id == $diary->user_id || $user_role == 1)
                     {
-                        $diary->title = is_null($request->title) ? $diary->title : $request->title;
-                        $diary->content = is_null($request->content) ? $diary->content : $request->content;
+                        $diary->title = is_null($request->title) 
+                        ? $diary->title : $request->title;
+                        $diary->content = is_null($request->content)
+                         ? $diary->content : $request->content;
                         $diary->user_id = $diary->user_id;
                         $diary->save();
 
-                        return response()->json(["message" => "Dairy updated successfully", "diary" => $diary], 401);
+                        return response()
+                        ->json(["message" => "Dairy updated successfully",
+                         "diary" => $diary], 401);
                     }
                     else
                     {
-                        return response()->json(["message" => "Unauthorized"], 401);
+                        return response()
+                        ->json(["message" => "Unauthorized"], 401);
                     }
                 }
                 else
@@ -108,7 +116,6 @@ class DiaryApiController extends Controller
 
                 $diary = Diary::find($id);
 
-                //Checks if its current users post or its an admin trying to delete.
                 if ($user_id == $diary->user_id || $user_role == 1)
                 {
 

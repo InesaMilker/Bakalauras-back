@@ -30,9 +30,12 @@ class DayApiController extends Controller
 
         if (!$isGuest) 
         {
-            if (Trips::where('id', request('trip_id'))->first()->user_id == $user_id) 
+            if (Trips::where('id', request('trip_id'))
+            ->first()->user_id == $user_id) 
             {
-                return Day::create(['day_number' => request('day_number'), 'trip_id' => request('trip_id'), 'budget' => request('budget'), 'note' => request('note'), 'user_id' => $user_id]);
+                return Day::create(['day_number' => request('day_number'),
+                 'trip_id' => request('trip_id'), 'budget' => request('budget'),
+                  'note' => request('note'), 'user_id' => $user_id]);
             } 
             else 
             {
@@ -59,11 +62,14 @@ class DayApiController extends Controller
 
                 if($user_id == $day->user_id)
                 {
-                    $day->day_number = is_null($request->day_number) ? $day->day_number : $request->day_number;
+                    $day->day_number = is_null($request->day_number) 
+                    ? $day->day_number : $request->day_number;
                     $day->user_id = $day->user_id;
                     $day->trip_id = $day->trip_id;
-                    $day->budget = is_null($request->budget) ? $day->budget : $request->budget;
-                    $day->note = is_null($request->note) ? $day->note : $request->note;
+                    $day->budget = is_null($request->budget) 
+                    ? $day->budget : $request->budget;
+                    $day->note = is_null($request->note) 
+                    ? $day->note : $request->note;
                     $day->save();
 
                     return response()

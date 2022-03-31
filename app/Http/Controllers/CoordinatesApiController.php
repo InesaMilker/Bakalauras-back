@@ -20,9 +20,13 @@ class CoordinatesApiController extends Controller
 
         if (!$isGuest) 
         {
-            if (Day::where('id', request('day_id'))->first()->user_id == $user_id) 
+            if (Day::where('id', request('day_id'))
+            ->first()->user_id == $user_id) 
             {
-                return Coordinates::create(['location_name' => request('location_name'), 'lat' => request('lat'), 'lng' => request('lng'), 'day_id' => request('day_id'), 'user_id' => $user_id]);
+                return Coordinates::create(['location_name' 
+                => request('location_name'), 'lat' => request('lat'), 
+                'lng' => request('lng'), 'day_id' => request('day_id'), 
+                'user_id' => $user_id]);
             } 
             else {
                 return response()->json(["message" => "Day not found"], 404);
@@ -42,9 +46,12 @@ class CoordinatesApiController extends Controller
         if (!$isGuest) {
             if (Coordinates::where('id', $id)->exists()) {
                 $cordinates = Coordinates::find($id);
-                $cordinates->location_name = is_null($request->location_name) ? $cordinates->location_name : $request->location_name;
-                $cordinates->lat = is_null($request->lat) ? $cordinates->lat : $request->lat;
-                $cordinates->lng = is_null($request->lng) ? $cordinates->lng : $request->lng;
+                $cordinates->location_name = is_null($request->location_name) 
+                ? $cordinates->location_name : $request->location_name;
+                $cordinates->lat = is_null($request->lat) 
+                ? $cordinates->lat : $request->lat;
+                $cordinates->lng = is_null($request->lng) 
+                ? $cordinates->lng : $request->lng;
                 $cordinates->day_id = $cordinates->day_id;
                 $cordinates->user_id = $cordinates->user_id;
                 $cordinates->save();

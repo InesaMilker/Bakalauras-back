@@ -25,7 +25,8 @@ class OutfitsApiController extends Controller
     public function store(Request $request)
     {
 
-        request()->validate(['outfit_name' => 'required', 'outfit_image' => 'required',]);
+        request()->validate(['outfit_name' => 'required', 
+        'outfit_image' => 'required',]);
         
         $isGuest = auth()->guest();
         
@@ -34,13 +35,16 @@ class OutfitsApiController extends Controller
             $user_id = auth()->user()->id;
 
             if($request->hasFile('outfit_image')) {
+                
                 $image = $request->file('outfit_image');
                 $filename = time().rand(1,3). '.'.$image->getClientOriginalName();
                 $image->move('uploads/', $filename);
 
-                return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image' => $filename, 'user_id' => $user_id,]);
+                return Outfit::create(['outfit_name' => request('outfit_name'), 
+                'outfit_image' => $filename, 'user_id' => $user_id,]);
             }
-            return Outfit::create(['outfit_name' => request('outfit_name'), 'outfit_image'=>"", 'user_id' => $user_id, ]); 
+            return Outfit::create(['outfit_name' => request('outfit_name'), 
+            'outfit_image'=>"", 'user_id' => $user_id, ]); 
         }
         else
         {
@@ -65,16 +69,20 @@ class OutfitsApiController extends Controller
 
                     if($user_id == $outfit->user_id || $user_role == 1)
                     {
-                        $outfit->outfit_name = is_null($request->outfit_name) ? $outfit->outfit_name : $request->outfit_name;
-                        $outfit->outfit_image = is_null($request->outfit_image) ? $outfit->outfit_image : $request->outfit_image;
+                        $outfit->outfit_name = is_null($request->outfit_name) ? 
+                        $outfit->outfit_name : $request->outfit_name;
+                        $outfit->outfit_image = is_null($request->outfit_image) 
+                        ? $outfit->outfit_image : $request->outfit_image;
                         $outfit->user_id = $outfit->user_id;
                         $outfit->save();
 
-                        return response()->json(["message" => "Outfit updated successfully", "outfit" => $outfit], 401);
+                        return response()->json(["message"
+                         => "Outfit updated successfully", "outfit" => $outfit], 401);
                     }
                     else
                     {
-                        return response()->json(["message" => "Unauthorized"], 401);
+                        return response()
+                        ->json(["message" => "Unauthorized"], 401);
                     }
                 }
                 else
@@ -111,7 +119,6 @@ class OutfitsApiController extends Controller
 
                 $outfit = Outfit::find($id);
 
-                //Checks if its current users post or its an admin trying to delete.
                 if ($user_id == $outfit->user_id || $user_role == 1)
                 {
 

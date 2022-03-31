@@ -24,7 +24,8 @@ class AuthController extends Controller
 
         if (!$token = auth()->attempt($credentials))
         {
-            return response()->json(['error' => 'Invalid email or password'], 401);
+            return response()
+            ->json(['error' => 'Invalid email or password'], 401);
         }
 
         return $this->respondWithToken($token);
@@ -32,7 +33,9 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
-        return response()->json(['access_token' => $token, 'token_type' => 'bearer', 'expires_in' => auth('api')->factory()
+        return response()
+        ->json(['access_token' => $token, 'token_type' => 'bearer', 
+        'expires_in' => auth('api')->factory()
             ->getTTL() * 60, ]);
     }
 
@@ -59,7 +62,8 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all() , ['name' => 'required|string|between:2,100', 
+        $validator = Validator::make($request->all() , 
+        ['name' => 'required|string|between:2,100', 
         'email' => 'required|string|email|max:100|unique:users', 
         'password' => 'required|string|confirmed|min:6', ]);
 
@@ -70,7 +74,8 @@ class AuthController extends Controller
                 ->toJson() , 400);
         }
 
-        $user = User::create(array_merge($validator->validated() , ['password' => bcrypt($request->password) ]));
+        $user = User::create(array_merge($validator->validated() ,
+         ['password' => bcrypt($request->password) ]));
 
         return response()
             ->json(['message' => 'User successfully registered', 'user' => $user], 201);
