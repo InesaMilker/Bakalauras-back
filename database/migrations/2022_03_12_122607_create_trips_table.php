@@ -6,32 +6,36 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTripsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('trips', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->float('rating')->default('0');
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create("trips", function (Blueprint $table) {
+      $table->id();
+      $table->string("title");
+      $table->date("start_date");
+      $table->date("end_date");
+      $table->float("rating")->default("0");
+      $table->foreignId("user_id");
+      $table
+        ->foreign("user_id")
+        ->references("id")
+        ->on("users")
+        ->onDelete("cascade");
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('trips');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists("trips");
+  }
 }

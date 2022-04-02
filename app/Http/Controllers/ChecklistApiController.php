@@ -8,156 +8,125 @@ use Illuminate\Support\Facades\Auth;
 
 class ChecklistApiController extends Controller
 {
-    public function index()
-    {
-        $isGuest = auth()->guest();
-        
-        if(!$isGuest)
-        {
-            $user_id = auth()->user()->id;
-            return Checklist::where('user_id', $user_id)->get();
-        }
-        else
-        {
-            return response()->json(["message" => "Unauthorized"], 401);
-        }
+  public function index()
+  {
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      return Checklist::where("user_id", $user_id)->get();
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
     }
+  }
 
-    public function store()
-    {
-        request()->validate([ 'text' => 'required',]);
-        
-        $isGuest = auth()->guest();
-        
-        if(!$isGuest)
-        {
-            $user_id = auth()->user()->id;
+  public function store()
+  {
+    request()->validate(["text" => "required"]);
 
-            return Checklist::create([ 'text' => request('text'),
-             'user_id' => $user_id, ]);
-        }
-        else
-        {
-            return response()->json(["message" => "Unauthorized"], 401);
-        }
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+
+      return Checklist::create([
+        "text" => request("text"),
+        "user_id" => $user_id,
+      ]);
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
     }
+  }
 
-    public function update(Request $request, $id)
-    {
-        if(Checklist::where('id', $id)->exists())
-        {
-            $isGuest = auth()->guest();
+  public function update(Request $request, $id)
+  {
+    if (Checklist::where("id", $id)->exists()) {
+      $isGuest = auth()->guest();
 
-            if(!$isGuest)
-            {
-                $user_id=auth()->user()->id;
-                $user_role = auth()->user()->role;
-                $checklist = Checklist::find($id);
+      if (!$isGuest) {
+        $user_id = auth()->user()->id;
+        $user_role = auth()->user()->role;
+        $checklist = Checklist::find($id);
 
-                if($user_id == $checklist->user_id || $user_role == 1)
-                {
-                    $checklist->state = is_null($request->state)
-                     ? $checklist->state : $request->state;
-                    $checklist->text = is_null($request->text)
-                     ? $checklist->text : $request->text;
-                    $checklist->user_id = $checklist->user_id;
-                    $checklist->save();
+        if ($user_id == $checklist->user_id || $user_role == 1) {
+          $checklist->state = is_null($request->state)
+            ? $checklist->state
+            : $request->state;
+          $checklist->text = is_null($request->text)
+            ? $checklist->text
+            : $request->text;
+          $checklist->user_id = $checklist->user_id;
+          $checklist->save();
 
-                    return response()
-                    ->json(["message" => "Checklist updated successfully",
-                     "ckecklist" => $checklist], 200);
-                }
-                else
-                {
-                    return response()
-                    ->json(["message" => "Unauthorized"], 401);
-                }         
-            }
-            else
-            {
-                return response()
-                    ->json(["message" => "Unauthorized"], 401);
-            }
+          return response()->json(
+            [
+              "message" => "Checklist updated successfully",
+              "ckecklist" => $checklist,
+            ],
+            200
+          );
+        } else {
+          return response()->json(["message" => "Unauthorized"], 401);
         }
-        else
-        {
-            return response()->json(["message" => "Checklist not found"], 404);
-        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
+    } else {
+      return response()->json(["message" => "Checklist not found"], 404);
     }
+  }
 
-    
-    public function destroy($id)
-    {
-        $isGuest = auth()->guest();
+  public function destroy($id)
+  {
+    $isGuest = auth()->guest();
 
-        if (!$isGuest)
-        {
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $user_role = auth()->user()->role;
 
-            $user_id = auth()->user()->id;
-            $user_role = auth()->user()->role;
+      if (Checklist::where("id", $id)->exists()) {
+        $checklist = Checklist::find($id);
 
-            if (Checklist::where('id', $id)->exists())
-            {
+        if ($user_id == $checklist->user_id || $user_role == 1) {
+          $checklist->delete();
 
-                $checklist = Checklist::find($id);
-
-                if ($user_id == $checklist->user_id || $user_role == 1)
-                {
-
-                    $checklist->delete();
-
-                    return response()
-                        ->json(["message" => "Checklist deleted"], 202);
-                }
-
-                else
-                {
-                    return response()
-                        ->json(["message" => "Unauthorized"], 401);
-                }
-
-            }
-            else
-            {
-                return response()
-                    ->json(["message" => "Checklist not found"], 404);
-            }
+          return response()->json(["message" => "Checklist deleted"], 202);
+        } else {
+          return response()->json(["message" => "Unauthorized"], 401);
         }
-        else
-        {
-            return response()
-                ->json(["message" => "Unauthorized"], 401);
-        }
+      } else {
+        return response()->json(["message" => "Checklist not found"], 404);
+      }
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
     }
+  }
 
-    public function wanted($id)
-    {
-        $isGuest = auth()->guest();
+  public function wanted($id)
+  {
+    $isGuest = auth()->guest();
 
-        if (!$isGuest) {
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $user_role = auth()->user()->role;
+      $checklist = Checklist::find($id);
 
-            $user_id = auth()->user()->id;
-            $user_role = auth()->user()->role;
-            $checklist = Checklist::find($id);
-
-            if ($user_id == $checklist->user_id || $user_role == 1) {
-
-                if (Checklist::where('id', $id)->exists()) {
-                    return Checklist::find($id);
-                } 
-                else {
-                    return response()->json([
-                        "message" => "Checklist not found",
-                    ], 404);
-                }
-            }
-            else {
-                return response()
-                    ->json(["message" => "Unauthorized"], 401);
-            }
-        } 
-        else {
-            return response()->json(["message" => "Unauthorized"], 401);
+      if ($user_id == $checklist->user_id || $user_role == 1) {
+        if (Checklist::where("id", $id)->exists()) {
+          return Checklist::find($id);
+        } else {
+          return response()->json(
+            [
+              "message" => "Checklist not found",
+            ],
+            404
+          );
         }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
     }
+  }
 }
