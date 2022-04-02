@@ -66,6 +66,7 @@ class DiaryApiController extends Controller
             ? $diary->content
             : $request->content;
           $diary->user_id = $diary->user_id;
+          $diary->trip_id = $diary->trip_id;
           $diary->save();
 
           return response()->json(

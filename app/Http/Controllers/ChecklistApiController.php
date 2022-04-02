@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checklist;
+use App\Models\Trips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,11 +29,17 @@ class ChecklistApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-
-      return Checklist::create([
-        "text" => request("text"),
-        "user_id" => $user_id,
-      ]);
+      if (
+        Trips::where("id", request("trip_id"))->first()->user_id == $user_id
+      ) {
+        return Checklist::create([
+          "text" => request("text"),
+          "trip_id" => request("trip_id"),
+          "user_id" => $user_id,
+        ]);
+      } else {
+        return response()->json(["message" => "Trip not found"], 404);
+      }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
     }
@@ -56,6 +63,7 @@ class ChecklistApiController extends Controller
             ? $checklist->text
             : $request->text;
           $checklist->user_id = $checklist->user_id;
+          $checklist->trip_id = $checklist->trip_id;
           $checklist->save();
 
           return response()->json(

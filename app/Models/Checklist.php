@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Checklist extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'state', 'text', 'user_id'
-    ];
+  use HasFactory;
+  protected $fillable = ["state", "text", "trip_id", "user_id"];
 }
