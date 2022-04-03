@@ -82,3 +82,4 @@ Route::get("/trips/{id}/checklist", [
   TripsApiController::class,
   "tripChecklist",
 ]);
+Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);

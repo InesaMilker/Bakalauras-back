@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checklist;
+use App\Models\Day;
 use App\Models\Trips;
 use Illuminate\Http\Request;
 
@@ -154,6 +155,21 @@ class TripsApiController extends Controller
         $checklist = Checklist::where("trip_id", $id)->get(),
         200
       );
+    } else {
+      return response()->json(
+        [
+          "message" => "Trip not found",
+        ],
+        404
+      );
+    }
+  }
+
+  public function tripDays($id, Day $day)
+  {
+    if (Trips::where("id", $id)->exists()) {
+      $trip = Trips::where("id", $id)->get();
+      return response($day = Day::where("trip_id", $id)->get(), 200);
     } else {
       return response()->json(
         [
