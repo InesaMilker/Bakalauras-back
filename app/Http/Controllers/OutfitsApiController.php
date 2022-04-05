@@ -11,12 +11,13 @@ class OutfitsApiController extends Controller
   {
     $isGuest = auth()->guest();
 
-    if (!$isGuest) {
-      $user_id = auth()->user()->id;
-      return Outfit::where("user_id", $user_id)->get();
-    } else {
+    if ($isGuest) {
       return response()->json(["message" => "Unauthorized"], 401);
     }
+
+    $user_id = auth()->user()->id;
+
+    return Outfit::where("user_id", $user_id)->get();
   }
 
   public function store(Request $request)
@@ -44,7 +45,7 @@ class OutfitsApiController extends Controller
       "user_id" => $user_id,
     ]);
 
-    $outfit->attach($request->get("clothes"));
+    $outfit->clothes()->attach($request->get("clothes"));
 
     return $outfit;
   }
