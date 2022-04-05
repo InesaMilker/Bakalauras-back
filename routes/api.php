@@ -6,6 +6,7 @@ use App\Http\Controllers\DiaryApiController;
 use App\Http\Controllers\OutfitsApiController;
 use App\Http\Controllers\TripsApiController;
 use App\Http\Controllers\DayApiController;
+use App\Http\Controllers\ClothesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -83,3 +84,5 @@ Route::get("/trips/{id}/checklist", [
   "tripChecklist",
 ]);
 Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);
+
+Route::get("/clothes/create", [ClothesController::class, "create"]);

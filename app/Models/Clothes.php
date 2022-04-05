@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Outfit extends Model
+class Clothes extends Model
 {
   protected $guarded = ["id"];
 
-  public function clothes()
+  public function outfits()
   {
-    return $this->belongsToMany(Clothes::class, "clothes_outfits");
+    return $this->belongsToMany(Outfit::class, "clothes_outfits");
   }
 }

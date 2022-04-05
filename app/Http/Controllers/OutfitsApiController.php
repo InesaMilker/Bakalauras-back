@@ -24,72 +24,65 @@ class OutfitsApiController extends Controller
     request()->validate([
       "outfit_name" => "required",
       "outfit_image" => "required",
+      "clothes" => "required|array",
+      "clothes.*" => "required|integer|exists:clothes,id",
     ]);
 
-    $isGuest = auth()->guest();
-
-    if (!$isGuest) {
-      $user_id = auth()->user()->id;
-
-      if ($request->hasFile("outfit_image")) {
-        $image = $request->file("outfit_image");
-        $filename = time() . rand(1, 3) . "." . $image->getClientOriginalName();
-        $image->move("uploads/", $filename);
-
-        return Outfit::create([
-          "outfit_name" => request("outfit_name"),
-          "outfit_image" => $filename,
-          "user_id" => $user_id,
-        ]);
-      }
-      return Outfit::create([
-        "outfit_name" => request("outfit_name"),
-        "outfit_image" => "",
-        "user_id" => $user_id,
-      ]);
-    } else {
+    if (auth()->guest()) {
       return response()->json(["message" => "Unauthorized"], 401);
     }
+
+    $user_id = auth()->user()->id;
+
+    $image = $request->file("outfit_image");
+    $filename = time() . rand(1, 3) . "." . $image->getClientOriginalName();
+    $image->move("uploads/", $filename);
+
+    $outfit = Outfit::create([
+      "outfit_name" => request("outfit_name"),
+      "outfit_image" => $filename,
+      "user_id" => $user_id,
+    ]);
+
+    $outfit->attach($request->get("clothes"));
+
+    return $outfit;
   }
 
   public function update(Request $request, $id)
   {
-    if (Outfit::where("id", $id)->exists()) {
-      $isGuest = auth()->guest();
+    if (auth()->guest()) {
+      return response()->json(["message" => "Unauthorized"], 401);
+    }
 
-      if (!$isGuest) {
-        $user_id = auth()->user()->id;
-        $user_role = auth()->user()->role;
+    $outfit = Outfit::find($id);
 
-        if (Outfit::where("id", $id)->exists()) {
-          $outfit = Outfit::find($id);
-
-          if ($user_id == $outfit->user_id || $user_role == 1) {
-            $outfit->outfit_name = is_null($request->outfit_name)
-              ? $outfit->outfit_name
-              : $request->outfit_name;
-            $outfit->outfit_image = is_null($request->outfit_image)
-              ? $outfit->outfit_image
-              : $request->outfit_image;
-            $outfit->user_id = $outfit->user_id;
-            $outfit->save();
-
-            return response()->json(
-              ["message" => "Outfit updated successfully", "outfit" => $outfit],
-              401
-            );
-          } else {
-            return response()->json(["message" => "Unauthorized"], 401);
-          }
-        } else {
-          return response()->json(["message" => "Outfit not found"], 404);
-        }
-      } else {
-        return response()->json(["message" => "Unauthorized"], 401);
-      }
-    } else {
+    if ($outfit === null) {
       return response()->json(["message" => "Outfit not found"], 404);
     }
+
+    $user_id = auth()->user()->id;
+    $user_role = auth()->user()->role;
+
+    if ($user_id == $outfit->user_id && $user_role != 1) {
+      return response()->json(["message" => "Outfit not found"], 404);
+    }
+
+    $outfit->outfit_name = is_null($request->outfit_name)
+      ? $outfit->outfit_name
+      : $request->outfit_name;
+
+    $outfit->outfit_image = is_null($request->outfit_image)
+      ? $outfit->outfit_image
+      : $request->outfit_image;
+
+    $outfit->user_id = $outfit->user_id;
+    $outfit->save();
+
+    return response()->json(
+      ["message" => "Outfit updated successfully", "outfit" => $outfit],
+      200
+    );
   }
 
   public function destroy($id)
