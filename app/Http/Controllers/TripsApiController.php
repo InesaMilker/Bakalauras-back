@@ -77,7 +77,7 @@ class TripsApiController extends Controller
 
             return response()->json(
               ["message" => "Trip updated successfully", "outfit" => $trips],
-              401
+              200
             );
           } else {
             return response()->json(["message" => "Unauthorized"], 401);

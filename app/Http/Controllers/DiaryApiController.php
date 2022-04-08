@@ -71,7 +71,7 @@ class DiaryApiController extends Controller
 
           return response()->json(
             ["message" => "Dairy updated successfully", "diary" => $diary],
-            401
+            200
           );
         } else {
           return response()->json(["message" => "Unauthorized"], 401);
