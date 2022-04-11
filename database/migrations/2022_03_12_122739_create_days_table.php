@@ -29,7 +29,7 @@ class CreateDaysTable extends Migration
         ->on("trips")
         ->onDelete("cascade");
       $table->float("budget");
-      $table->string("note");
+      $table->text("note");
       $table->timestamps();
     });
   }
