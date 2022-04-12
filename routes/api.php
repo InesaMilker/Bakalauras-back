@@ -63,7 +63,7 @@ Route::delete("/coordinates/{id}", [
 Route::get("/coordinates/{id}", [CoordinatesApiController::class, "wanted"]);
 
 Route::get("/checklist", [ChecklistApiController::class, "index"]);
-Route::post("/checklist", [ChecklistApiController::class, "store"]);
+Route::post("/trips/{id}/checklist", [ChecklistApiController::class, "store"]);
 Route::put("/checklist/{id}", [ChecklistApiController::class, "update"]);
 Route::delete("/checklist/{id}", [ChecklistApiController::class, "destroy"]);
 Route::get("/checklist/{id}", [ChecklistApiController::class, "wanted"]);
