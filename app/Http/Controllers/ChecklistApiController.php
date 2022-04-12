@@ -30,14 +30,17 @@ class ChecklistApiController extends Controller
     if (!$isGuest) {
       $user_id = auth()->user()->id;
       if (
-        Trips::where("id", request("trip_id"))->first()->user_id == $user_id ||
-        Trips::where("id", request("trip_id"))->exists()
+        Trips::where("id", request("trip_id"))->first()->user_id == $user_id
       ) {
-        return Checklist::create([
-          "text" => request("text"),
-          "trip_id" => request("trip_id"),
-          "user_id" => $user_id,
-        ]);
+        if (Trips::where("id", request("trip_id"))->exists()) {
+          return Checklist::create([
+            "text" => request("text"),
+            "trip_id" => request("trip_id"),
+            "user_id" => $user_id,
+          ]);
+        } else {
+          return response()->json(["message" => "Trip not found"], 404);
+        }
       } else {
         return response()->json(["message" => "Trip not found"], 404);
       }
