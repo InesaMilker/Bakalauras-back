@@ -21,7 +21,7 @@ class ChecklistApiController extends Controller
     }
   }
 
-  public function store()
+  public function store($id)
   {
     request()->validate(["text" => "required"]);
 
@@ -29,12 +29,10 @@ class ChecklistApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      if (
-        Trips::where("id", request("trip_id"))->first()->user_id == $user_id
-      ) {
+      if (Trips::where("id", $id)->first()->user_id == $user_id) {
         return Checklist::create([
           "text" => request("text"),
-          "trip_id" => request("trip_id"),
+          "trip_id" => $id,
           "user_id" => $user_id,
         ]);
       } else {
