@@ -185,7 +185,7 @@ class TripsApiController extends Controller
   {
     if (Trips::where("id", $id)->exists()) {
       $trip = Trips::where("id", $id)->get();
-      return response($diary = Diary::where("trip_id", $id)->get(), 200);
+      return response($diary = Diary::where("trip_id", $id)->get()[0], 200);
     } else {
       return response()->json(
         [
