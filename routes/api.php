@@ -79,11 +79,13 @@ Route::post("/trips", [TripsApiController::class, "store"]);
 Route::put("/trips/{id}", [TripsApiController::class, "update"]);
 Route::delete("/trips/{id}", [TripsApiController::class, "destroy"]);
 Route::get("/trips/{id}", [TripsApiController::class, "wanted"]);
+
 Route::get("/trips/{id}/checklist", [
   TripsApiController::class,
   "tripChecklist",
 ]);
 Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);
+Route::get("/trips/{id}/diary", [TripsApiController::class, "tripDiary"]);
 
 Route::post("/clothes", [ClothesController::class, "create"]);
 Route::get("/clothes", [ClothesController::class, "all"]);
