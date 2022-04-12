@@ -184,8 +184,11 @@ class TripsApiController extends Controller
   public function tripDiary($id, Diary $diary)
   {
     if (Trips::where("id", $id)->exists()) {
-      $trip = Trips::where("id", $id)->get();
-      return response($diary = Diary::where("trip_id", $id)->get()[0], 200);
+      if (Diary::where("trip_id", $id)->exists()) {
+        return response(Diary::where("trip_id", $id)->get()[0], 200);
+      } else {
+        return response()->json(["message" => "Diary not found"], 404);
+      }
     } else {
       return response()->json(
         [
