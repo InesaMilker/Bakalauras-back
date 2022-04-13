@@ -181,7 +181,7 @@ class TripsApiController extends Controller
     }
   }
 
-  public function tripDiary($id, Diary $diary)
+  public function tripSingleDiary($id, Diary $diary)
   {
     if (Trips::where("id", $id)->exists()) {
       if (Diary::where("trip_id", $id)->exists()) {
@@ -189,6 +189,21 @@ class TripsApiController extends Controller
       } else {
         return response()->json(["message" => "Diary not found"], 404);
       }
+    } else {
+      return response()->json(
+        [
+          "message" => "Trip not found",
+        ],
+        404
+      );
+    }
+  }
+
+  public function tripDiaries($id, Diary $diary)
+  {
+    if (Trips::where("id", $id)->exists()) {
+      $trip = Trips::where("id", $id)->get();
+      return response($diary = Diary::where("trip_id", $id)->get(), 200);
     } else {
       return response()->json(
         [

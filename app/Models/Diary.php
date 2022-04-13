@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Diary extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'title', 'content', 'user_id', 'trip_id'
-    ];
+  use HasFactory;
+  protected $fillable = ["title", "content", "date", "user_id", "trip_id"];
 }

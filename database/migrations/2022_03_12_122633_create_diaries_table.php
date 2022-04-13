@@ -17,6 +17,7 @@ class CreateDiariesTable extends Migration
       $table->id();
       $table->string("title");
       $table->text("content");
+      $table->date("date");
       $table->foreignId("user_id");
       $table
         ->foreign("user_id")

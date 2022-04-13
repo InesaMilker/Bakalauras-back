@@ -85,7 +85,8 @@ Route::get("/trips/{id}/checklist", [
   "tripChecklist",
 ]);
 Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);
-Route::get("/trips/{id}/diary", [TripsApiController::class, "tripDiary"]);
+Route::get("/trips/{id}/diary", [TripsApiController::class, "tripSingleDiary"]);
+Route::get("/trips/{id}/diaries", [TripsApiController::class, "tripDiaries"]);
 
 Route::post("/clothes", [ClothesController::class, "create"]);
 Route::get("/clothes", [ClothesController::class, "all"]);

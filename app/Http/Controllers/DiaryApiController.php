@@ -6,6 +6,7 @@ use App\Models\Diary;
 use Illuminate\Http\Request;
 use App\Models\Trips;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DiaryApiController extends Controller
 {
@@ -23,22 +24,38 @@ class DiaryApiController extends Controller
 
   public function store()
   {
-    request()->validate(["title" => "required", "content" => "required"]);
+    request()->validate([
+      "title" => "required",
+      "content" => "required",
+      "date" => "required",
+    ]);
 
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
+      $start_date = Trips::where("id", request("trip_id"))->first()->start_date;
+      $end_date = Trips::where("id", request("trip_id"))->first()->end_date;
 
       if (
         Trips::where("id", request("trip_id"))->first()->user_id == $user_id
       ) {
-        return Diary::create([
-          "title" => request("title"),
-          "content" => request("content"),
-          "user_id" => $user_id,
-          "trip_id" => request("trip_id"),
-        ]);
+        if (request("date") >= $start_date && request("date") <= $end_date) {
+          return Diary::create([
+            "title" => request("title"),
+            "content" => request("content"),
+            "date" => request("date"),
+            "user_id" => $user_id,
+            "trip_id" => request("trip_id"),
+          ]);
+        } else {
+          return response()->json(
+            [
+              "message" => "Date is not in the trip date range",
+            ],
+            405
+          );
+        }
       } else {
         return response()->json(["message" => "Trip not found"], 404);
       }
@@ -65,6 +82,9 @@ class DiaryApiController extends Controller
           $diary->content = is_null($request->content)
             ? $diary->content
             : $request->content;
+          $diary->date = is_null($request->date)
+            ? $diary->date
+            : $request->date;
           $diary->user_id = $diary->user_id;
           $diary->trip_id = $diary->trip_id;
           $diary->save();
