@@ -48,7 +48,7 @@ class TripsApiController extends Controller
 
   public function update(Request $request, $id)
   {
-    request()->validate(["rating" => "numeric|between:1,8"]);
+    request()->validate(["rating" => "numeric|between:1,10"]);
 
     if (Trips::where("id", $id)->exists()) {
       $isGuest = auth()->guest();
@@ -159,7 +159,6 @@ class TripsApiController extends Controller
 
       if ($user_id == $checklist->user_id || $user_role == 1) {
         if (Trips::where("id", $id)->exists()) {
-          $trip = Trips::where("id", $id)->get();
           return response(
             $checklist = Checklist::where("trip_id", $id)->get(),
             200
@@ -189,7 +188,6 @@ class TripsApiController extends Controller
       $day = Day::find($id);
       if ($user_id == $day->user_id) {
         if (Trips::where("id", $id)->exists()) {
-          $trip = Trips::where("id", $id)->get();
           return response($day = Day::where("trip_id", $id)->get(), 200);
         } else {
           return response()->json(
@@ -250,7 +248,6 @@ class TripsApiController extends Controller
 
       if ($user_id == $diary->user_id || $user_role == 1) {
         if (Trips::where("id", $id)->exists()) {
-          $trip = Trips::where("id", $id)->get();
           return response($diary = Diary::where("trip_id", $id)->get(), 200);
         } else {
           return response()->json(
