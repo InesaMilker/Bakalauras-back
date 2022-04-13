@@ -150,67 +150,121 @@ class TripsApiController extends Controller
 
   public function tripChecklist($id, Checklist $checklist)
   {
-    if (Trips::where("id", $id)->exists()) {
-      $trip = Trips::where("id", $id)->get();
-      return response(
-        $checklist = Checklist::where("trip_id", $id)->get(),
-        200
-      );
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $user_role = auth()->user()->role;
+      $checklist = Checklist::find($id);
+
+      if ($user_id == $checklist->user_id || $user_role == 1) {
+        if (Trips::where("id", $id)->exists()) {
+          $trip = Trips::where("id", $id)->get();
+          return response(
+            $checklist = Checklist::where("trip_id", $id)->get(),
+            200
+          );
+        } else {
+          return response()->json(
+            [
+              "message" => "Trip not found",
+            ],
+            404
+          );
+        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
     } else {
-      return response()->json(
-        [
-          "message" => "Trip not found",
-        ],
-        404
-      );
+      return response()->json(["message" => "Unauthorized"], 401);
     }
   }
 
   public function tripDays($id, Day $day)
   {
-    if (Trips::where("id", $id)->exists()) {
-      $trip = Trips::where("id", $id)->get();
-      return response($day = Day::where("trip_id", $id)->get(), 200);
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $day = Day::find($id);
+      if ($user_id == $day->user_id) {
+        if (Trips::where("id", $id)->exists()) {
+          $trip = Trips::where("id", $id)->get();
+          return response($day = Day::where("trip_id", $id)->get(), 200);
+        } else {
+          return response()->json(
+            [
+              "message" => "Trip not found",
+            ],
+            404
+          );
+        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
     } else {
-      return response()->json(
-        [
-          "message" => "Trip not found",
-        ],
-        404
-      );
+      return response()->json(["message" => "Unauthorized"], 401);
     }
   }
 
-  public function tripSingleDiary($id, Diary $diary)
+  public function tripFirstDiary($id, Diary $diary)
   {
-    if (Trips::where("id", $id)->exists()) {
-      if (Diary::where("trip_id", $id)->exists()) {
-        return response(Diary::where("trip_id", $id)->get()[0], 200);
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $user_role = auth()->user()->role;
+      $diary = Diary::find($id);
+
+      if ($user_id == $diary->user_id || $user_role == 1) {
+        if (Trips::where("id", $id)->exists()) {
+          if (Diary::where("trip_id", $id)->exists()) {
+            return response(Diary::where("trip_id", $id)->get()[0], 200);
+          } else {
+            return response()->json(["message" => "Diary not found"], 404);
+          }
+        } else {
+          return response()->json(
+            [
+              "message" => "Trip not found",
+            ],
+            404
+          );
+        }
       } else {
-        return response()->json(["message" => "Diary not found"], 404);
+        return response()->json(["message" => "Unauthorized"], 401);
       }
     } else {
-      return response()->json(
-        [
-          "message" => "Trip not found",
-        ],
-        404
-      );
+      return response()->json(["message" => "Unauthorized"], 401);
     }
   }
 
   public function tripDiaries($id, Diary $diary)
   {
-    if (Trips::where("id", $id)->exists()) {
-      $trip = Trips::where("id", $id)->get();
-      return response($diary = Diary::where("trip_id", $id)->get(), 200);
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $user_role = auth()->user()->role;
+      $diary = Diary::find($id);
+
+      if ($user_id == $diary->user_id || $user_role == 1) {
+        if (Trips::where("id", $id)->exists()) {
+          $trip = Trips::where("id", $id)->get();
+          return response($diary = Diary::where("trip_id", $id)->get(), 200);
+        } else {
+          return response()->json(
+            [
+              "message" => "Trip not found",
+            ],
+            404
+          );
+        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
     } else {
-      return response()->json(
-        [
-          "message" => "Trip not found",
-        ],
-        404
-      );
+      return response()->json(["message" => "Unauthorized"], 401);
     }
   }
 }

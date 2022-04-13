@@ -52,6 +52,10 @@ Route::post("/diary", [DiaryApiController::class, "store"]);
 Route::put("/diary/{id}", [DiaryApiController::class, "update"]);
 Route::delete("/diary/{id}", [DiaryApiController::class, "destroy"]);
 Route::get("/diary/{id}", [DiaryApiController::class, "wanted"]);
+Route::get("/trips/{trip_id}/diaries/{diary_id}", [
+  DiaryApiController::class,
+  "tripDiariesSingle",
+]);
 
 Route::get("/coordinates", [CoordinatesApiController::class, "index"]);
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);
@@ -85,7 +89,7 @@ Route::get("/trips/{id}/checklist", [
   "tripChecklist",
 ]);
 Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);
-Route::get("/trips/{id}/diary", [TripsApiController::class, "tripSingleDiary"]);
+Route::get("/trips/{id}/diary", [TripsApiController::class, "tripFirstDiary"]);
 Route::get("/trips/{id}/diaries", [TripsApiController::class, "tripDiaries"]);
 
 Route::post("/clothes", [ClothesController::class, "create"]);
