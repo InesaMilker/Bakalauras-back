@@ -48,7 +48,7 @@ class TripsApiController extends Controller
 
   public function update(Request $request, $id)
   {
-    request()->validate(["rating" => "numeric|between:1,10"]);
+    request()->validate(["rating" => "numeric|between:1,5"]);
 
     if (Trips::where("id", $id)->exists()) {
       $isGuest = auth()->guest();
