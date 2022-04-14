@@ -23,6 +23,7 @@ class CoordinatesApiController extends Controller
         return Coordinates::create([
           "lat" => request("lat"),
           "lng" => request("lng"),
+          "location_name" => request("location_name"),
           "day_id" => request("day_id"),
           "user_id" => $user_id,
         ]);
@@ -47,6 +48,9 @@ class CoordinatesApiController extends Controller
         $cordinates->lng = is_null($request->lng)
           ? $cordinates->lng
           : $request->lng;
+        $cordinates->location_name = is_null($request->location_name)
+          ? $cordinates->location_name
+          : $request->location_name;
         $cordinates->day_id = $cordinates->day_id;
         $cordinates->user_id = $cordinates->user_id;
         $cordinates->save();
