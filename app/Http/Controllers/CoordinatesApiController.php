@@ -21,7 +21,6 @@ class CoordinatesApiController extends Controller
     if (!$isGuest) {
       if (Day::where("id", request("day_id"))->first()->user_id == $user_id) {
         return Coordinates::create([
-          "place_id" => request("place_id"),
           "lat" => request("lat"),
           "lng" => request("lng"),
           "day_id" => request("day_id"),
@@ -42,9 +41,6 @@ class CoordinatesApiController extends Controller
     if (!$isGuest) {
       if (Coordinates::where("id", $id)->exists()) {
         $cordinates = Coordinates::find($id);
-        $cordinates->place_id = is_null($request->place_id)
-          ? $cordinates->place_id
-          : $request->place_id;
         $cordinates->lat = is_null($request->lat)
           ? $cordinates->lat
           : $request->lat;

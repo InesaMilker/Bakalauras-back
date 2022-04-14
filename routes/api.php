@@ -77,6 +77,10 @@ Route::post("/day", [DayApiController::class, "store"]);
 Route::put("/day/{id}", [DayApiController::class, "update"]);
 Route::delete("/day/{id}", [DayApiController::class, "destroy"]);
 Route::get("/day/{id}", [DayApiController::class, "wanted"]);
+Route::get("/day/{id}/coordinates", [
+  DayApiController::class,
+  "dayCoordinates",
+]);
 
 Route::get("/trips", [TripsApiController::class, "index"]);
 Route::post("/trips", [TripsApiController::class, "store"]);

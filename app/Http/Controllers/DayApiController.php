@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coordinates;
 use App\Models\Day;
 use App\Models\Trips;
 use Illuminate\Http\Request;
@@ -115,6 +116,35 @@ class DayApiController extends Controller
       if ($user_id == $day->user_id) {
         if (Day::where("id", $id)->exists()) {
           return Day::find($id);
+        } else {
+          return response()->json(
+            [
+              "message" => "Day not found",
+            ],
+            404
+          );
+        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
+    }
+  }
+
+  public function dayCoordinates($id, Coordinates $coordinates)
+  {
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $coordinates = Coordinates::find($id);
+      if ($user_id == $coordinates->user_id) {
+        if (Day::where("id", $id)->exists()) {
+          return response(
+            $coordinates = Coordinates::where("day_id", $id)->get(),
+            200
+          );
         } else {
           return response()->json(
             [
