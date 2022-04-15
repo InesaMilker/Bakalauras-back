@@ -239,12 +239,12 @@ class TripsApiController extends Controller
     if (!$isGuest) {
       $user_id = auth()->user()->id;
       $user_role = auth()->user()->role;
-      $diary = Diary::find($id);
+      $trip = Trips::find($id);
 
-      if ($user_id == $diary->user_id || $user_role == 1) {
+      if ($user_id == $trip->user_id || $user_role == 1) {
         if (Trips::where("id", $id)->exists()) {
           if (Diary::where("trip_id", $id)->exists()) {
-            return response($diary = Diary::where("trip_id", $id)->get(), 200);
+            return response(Diary::where("trip_id", $id)->get(), 200);
           } else {
             return response()->json(["message" => "Diary not found"], 404);
           }
