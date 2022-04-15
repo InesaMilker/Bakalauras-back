@@ -142,7 +142,7 @@ class DayApiController extends Controller
 
       if ($user_id == $day->user_id) {
         if (Day::where("id", $id)->exists()) {
-          if (Coordinates::where("trip_id", $id)->exists()) {
+          if (Coordinates::where("day_id", $id)->exists()) {
             return response(Coordinates::where("day_id", $id)->get(), 200);
           } else {
             return response()->json(["message" => "Coordinate not found"], 404);
