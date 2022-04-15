@@ -179,16 +179,17 @@ class TripsApiController extends Controller
     }
   }
 
-  public function tripDays($id, Day $day)
+  public function tripDays($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $day = Day::find($id);
-      if ($user_id == $day->user_id) {
+      $trip = Trips::find($id);
+
+      if ($user_id == $trip->user_id) {
         if (Trips::where("id", $id)->exists()) {
-          return response($day = Day::where("trip_id", $id)->get(), 200);
+          return response(Day::where("trip_id", $id)->get(), 200);
         } else {
           return response()->json(
             [
