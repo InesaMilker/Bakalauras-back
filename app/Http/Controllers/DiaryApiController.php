@@ -28,6 +28,7 @@ class DiaryApiController extends Controller
       "title" => "required",
       "content" => "required",
       "date" => "required",
+      "trip_id" => "required",
     ]);
 
     $isGuest = auth()->guest();
