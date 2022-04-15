@@ -165,7 +165,7 @@ class DiaryApiController extends Controller
     if (!$isGuest) {
       $user_id = auth()->user()->id;
       $diary = Diary::find($diary_id);
-      $trip = Trips::find($diary_id);
+      $trip = Trips::find($trip_id);
 
       if ($user_id == $diary->user_id) {
         if ($user_id == $trip->user_id) {
