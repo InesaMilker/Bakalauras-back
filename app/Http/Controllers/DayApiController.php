@@ -132,19 +132,21 @@ class DayApiController extends Controller
     }
   }
 
-  public function dayCoordinates($id, Coordinates $coordinates)
+  public function dayCoordinates($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $coordinates = Coordinates::find($id);
-      if ($user_id == $coordinates->user_id) {
+      $day = Day::find($id);
+
+      if ($user_id == $day->user_id) {
         if (Day::where("id", $id)->exists()) {
-          return response(
-            $coordinates = Coordinates::where("day_id", $id)->get(),
-            200
-          );
+          if (Coordinates::where("trip_id", $id)->exists()) {
+            return response(Coordinates::where("day_id", $id)->get(), 200);
+          } else {
+            return response()->json(["message" => "Coordinate not found"], 404);
+          }
         } else {
           return response()->json(
             [

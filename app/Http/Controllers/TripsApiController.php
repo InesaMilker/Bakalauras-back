@@ -126,10 +126,9 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
       $trips = Trips::find($id);
 
-      if ($user_id == $trips->user_id || $user_role == 1) {
+      if ($user_id == $trips->user_id) {
         if (Trips::where("id", $id)->exists()) {
           return Trips::find($id);
         } else {
@@ -148,21 +147,17 @@ class TripsApiController extends Controller
     }
   }
 
-  public function tripChecklist($id, Checklist $checklist)
+  public function tripChecklist($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
-      $checklist = Checklist::find($id);
+      $trip = Trips::find($id);
 
-      if ($user_id == $checklist->user_id || $user_role == 1) {
+      if ($user_id == $trip->user_id) {
         if (Trips::where("id", $id)->exists()) {
-          return response(
-            $checklist = Checklist::where("trip_id", $id)->get(),
-            200
-          );
+          return response(Checklist::where("trip_id", $id)->get(), 200);
         } else {
           return response()->json(
             [
@@ -206,16 +201,15 @@ class TripsApiController extends Controller
     }
   }
 
-  public function tripFirstDiary($id, Diary $diary)
+  public function tripFirstDiary($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
-      $diary = Diary::find($id);
+      $trip = Trips::find($id);
 
-      if ($user_id == $diary->user_id || $user_role == 1) {
+      if ($user_id == $trip->user_id) {
         if (Trips::where("id", $id)->exists()) {
           if (Diary::where("trip_id", $id)->exists()) {
             return response(Diary::where("trip_id", $id)->get()[0], 200);
@@ -249,7 +243,11 @@ class TripsApiController extends Controller
 
       if ($user_id == $diary->user_id || $user_role == 1) {
         if (Trips::where("id", $id)->exists()) {
-          return response($diary = Diary::where("trip_id", $id)->get(), 200);
+          if (Diary::where("trip_id", $id)->exists()) {
+            return response($diary = Diary::where("trip_id", $id)->get(), 200);
+          } else {
+            return response()->json(["message" => "Diary not found"], 404);
+          }
         } else {
           return response()->json(
             [
