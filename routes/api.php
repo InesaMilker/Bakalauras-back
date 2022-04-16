@@ -7,6 +7,7 @@ use App\Http\Controllers\OutfitsApiController;
 use App\Http\Controllers\TripsApiController;
 use App\Http\Controllers\DayApiController;
 use App\Http\Controllers\ClothesController;
+use App\Http\Controllers\LinksApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,8 @@ Route::get("/trips/{trip_id}/diaries/{diary_id}", [
   DiaryApiController::class,
   "tripDiariesSingle",
 ]);
+
+Route::post("/link", [LinksApiController::class, "store"]);
 
 Route::get("/coordinates", [CoordinatesApiController::class, "index"]);
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);

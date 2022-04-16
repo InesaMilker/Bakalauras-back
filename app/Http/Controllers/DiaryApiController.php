@@ -35,27 +35,33 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $start_date = Trips::where("id", request("trip_id"))->first()->start_date;
-      $end_date = Trips::where("id", request("trip_id"))->first()->end_date;
 
-      if (
-        Trips::where("id", request("trip_id"))->first()->user_id == $user_id
-      ) {
-        if (request("date") >= $start_date && request("date") <= $end_date) {
-          return Diary::create([
-            "title" => request("title"),
-            "content" => request("content"),
-            "date" => request("date"),
-            "user_id" => $user_id,
-            "trip_id" => request("trip_id"),
-          ]);
+      if (Trips::where("id", request("trip_id"))->exists()) {
+        $start_date = Trips::where("id", request("trip_id"))->first()
+          ->start_date;
+        $end_date = Trips::where("id", request("trip_id"))->first()->end_date;
+
+        if (
+          Trips::where("id", request("trip_id"))->first()->user_id == $user_id
+        ) {
+          if (request("date") >= $start_date && request("date") <= $end_date) {
+            return Diary::create([
+              "title" => request("title"),
+              "content" => request("content"),
+              "date" => request("date"),
+              "user_id" => $user_id,
+              "trip_id" => request("trip_id"),
+            ]);
+          } else {
+            return response()->json(
+              [
+                "message" => "Date is not in the trip date range",
+              ],
+              405
+            );
+          }
         } else {
-          return response()->json(
-            [
-              "message" => "Date is not in the trip date range",
-            ],
-            405
-          );
+          return response()->json(["message" => "Trip not found"], 404);
         }
       } else {
         return response()->json(["message" => "Trip not found"], 404);

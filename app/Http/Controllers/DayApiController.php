@@ -23,20 +23,31 @@ class DayApiController extends Controller
 
   public function store()
   {
+    request()->validate([
+      "day_number" => "required",
+      "trip_id" => "required",
+      "budget" => "required",
+      "note" => "required",
+    ]);
+
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;
 
     if (!$isGuest) {
-      if (
-        Trips::where("id", request("trip_id"))->first()->user_id == $user_id
-      ) {
-        return Day::create([
-          "day_number" => request("day_number"),
-          "trip_id" => request("trip_id"),
-          "budget" => request("budget"),
-          "note" => request("note"),
-          "user_id" => $user_id,
-        ]);
+      if (Trips::where("id", request("trip_id"))->exists()) {
+        if (
+          Trips::where("id", request("trip_id"))->first()->user_id == $user_id
+        ) {
+          return Day::create([
+            "day_number" => request("day_number"),
+            "trip_id" => request("trip_id"),
+            "budget" => request("budget"),
+            "note" => request("note"),
+            "user_id" => $user_id,
+          ]);
+        } else {
+          return response()->json(["message" => "Trip not found"], 404);
+        }
       } else {
         return response()->json(["message" => "Trip not found"], 404);
       }

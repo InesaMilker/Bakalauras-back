@@ -15,18 +15,29 @@ class CoordinatesApiController extends Controller
 
   public function store()
   {
+    request()->validate([
+      "location_name" => "required",
+      "lat" => "required",
+      "lng" => "required",
+      "day_id" => "required",
+    ]);
+
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;
 
     if (!$isGuest) {
-      if (Day::where("id", request("day_id"))->first()->user_id == $user_id) {
-        return Coordinates::create([
-          "lat" => request("lat"),
-          "lng" => request("lng"),
-          "location_name" => request("location_name"),
-          "day_id" => request("day_id"),
-          "user_id" => $user_id,
-        ]);
+      if (Day::where("id", request("day_id"))->exists()) {
+        if (Day::where("id", request("day_id"))->first()->user_id == $user_id) {
+          return Coordinates::create([
+            "lat" => request("lat"),
+            "lng" => request("lng"),
+            "location_name" => request("location_name"),
+            "day_id" => request("day_id"),
+            "user_id" => $user_id,
+          ]);
+        } else {
+          return response()->json(["message" => "Day not found"], 404);
+        }
       } else {
         return response()->json(["message" => "Day not found"], 404);
       }
