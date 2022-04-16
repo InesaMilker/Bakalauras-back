@@ -60,7 +60,7 @@ class LinksApiController extends Controller
       $diary_id = Links::where("link_number", $id)
         ->get()
         ->pluck("diary_id");
-      return Diary::where("id", $diary_id)->get();
+      return Diary::where("id", $diary_id)->get()[0];
     } else {
       return response()->json(
         [
