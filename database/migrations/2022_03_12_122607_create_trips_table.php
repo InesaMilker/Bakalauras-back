@@ -19,6 +19,7 @@ class CreateTripsTable extends Migration
       $table->date("start_date");
       $table->date("end_date");
       $table->float("rating")->default("0");
+      $table->string("place_id");
       $table->foreignId("user_id");
       $table
         ->foreign("user_id")

@@ -63,9 +63,8 @@ class OutfitsApiController extends Controller
     }
 
     $user_id = auth()->user()->id;
-    $user_role = auth()->user()->role;
 
-    if ($user_id == $outfit->user_id && $user_role != 1) {
+    if ($user_id != $outfit->user_id) {
       return response()->json(["message" => "Outfit not found"], 404);
     }
 
@@ -73,9 +72,7 @@ class OutfitsApiController extends Controller
       ? $outfit->outfit_name
       : $request->outfit_name;
 
-    $outfit->outfit_image = is_null($request->outfit_image)
-      ? $outfit->outfit_image
-      : $request->outfit_image;
+    $outfit->outfit_image = $outfit->outfit_image;
 
     $outfit->user_id = $outfit->user_id;
     $outfit->save();

@@ -31,6 +31,7 @@ class TripsApiController extends Controller
       "title" => "required",
       "start_date" => "required",
       "end_date" => "required",
+      "place_id" => "required",
     ]);
 
     $isGuest = auth()->guest();
@@ -42,6 +43,7 @@ class TripsApiController extends Controller
         "title" => request("title"),
         "start_date" => request("start_date"),
         "end_date" => request("end_date"),
+        "place_id" => request("place_id"),
         "user_id" => $user_id,
       ]);
     } else {
@@ -76,6 +78,9 @@ class TripsApiController extends Controller
             $trips->rating = is_null($request->rating)
               ? $trips->rating
               : $request->rating;
+            $trips->place_id = is_null($request->place_id)
+              ? $trips->place_id
+              : $request->place_id;
             $trips->user_id = $trips->user_id;
             $trips->save();
 
@@ -103,12 +108,11 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
 
       if (Trips::where("id", $id)->exists()) {
         $trips = Trips::find($id);
 
-        if ($user_id == $trips->user_id || $user_role == 1) {
+        if ($user_id == $trips->user_id) {
           $trips->delete();
 
           return response()->json(["message" => "Trip deleted"], 202);

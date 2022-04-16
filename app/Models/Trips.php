@@ -14,5 +14,6 @@ class Trips extends Model
     "end_date",
     "rating",
     "user_id",
+    "place_id",
   ];
 }

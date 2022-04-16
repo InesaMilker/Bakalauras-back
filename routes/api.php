@@ -70,6 +70,11 @@ Route::delete("/coordinates/{id}", [
 ]);
 Route::get("/coordinates/{id}", [CoordinatesApiController::class, "wanted"]);
 
+Route::get("/clothes", [ClothesController::class, "all"]);
+Route::post("/clothes", [ClothesController::class, "create"]);
+Route::put("/clothes/{id}", [ClothesController::class, "update"]);
+Route::delete("/clothes/{id}", [ClothesController::class, "destroy"]);
+
 Route::get("/checklist", [ChecklistApiController::class, "index"]);
 Route::post("/trips/{id}/checklist", [ChecklistApiController::class, "store"]);
 Route::put("/checklist/{id}", [ChecklistApiController::class, "update"]);
@@ -99,6 +104,3 @@ Route::get("/trips/{id}/checklist", [
 Route::get("/trips/{id}/days", [TripsApiController::class, "tripDays"]);
 Route::get("/trips/{id}/diary", [TripsApiController::class, "tripFirstDiary"]);
 Route::get("/trips/{id}/diaries", [TripsApiController::class, "tripDiaries"]);
-
-Route::post("/clothes", [ClothesController::class, "create"]);
-Route::get("/clothes", [ClothesController::class, "all"]);

@@ -16,8 +16,8 @@ class Outfit extends Model
     return $this->belongsToMany(Clothes::class, "clothes_outfits");
   }
 
-  public function user()
-  {
-    return $this->belongsTo(User::class, "user_id", "id");
-  }
+  // public function user()
+  // {
+  //   return $this->belongsTo(User::class, "user_id", "id");
+  // }
 }
