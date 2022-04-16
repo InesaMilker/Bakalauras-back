@@ -47,7 +47,11 @@ class LinksApiController extends Controller
     for ($i = 0; $i < $length; $i++) {
       $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    return $randomString;
+    if (Links::where("link_number", $randomString)->exists()) {
+      $this->generateRandomString();
+    } else {
+      return $randomString;
+    }
   }
 
   public function diaryLink($id)
