@@ -59,6 +59,7 @@ Route::get("/trips/{trip_id}/diaries/{diary_id}", [
 ]);
 
 Route::post("/link", [LinksApiController::class, "store"]);
+Route::get("/link/{id}", [LinksApiController::class, "diaryLink"]);
 
 Route::get("/coordinates", [CoordinatesApiController::class, "index"]);
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);

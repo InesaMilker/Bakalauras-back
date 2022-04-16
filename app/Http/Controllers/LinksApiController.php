@@ -49,4 +49,21 @@ class LinksApiController extends Controller
     }
     return $randomString;
   }
+
+  public function diaryLink($id)
+  {
+    if (Links::where("link_number", $id)->exists()) {
+      $diary_id = Links::where("link_number", $id)
+        ->get()
+        ->pluck("diary_id");
+      return Diary::find($diary_id);
+    } else {
+      return response()->json(
+        [
+          "message" => "Diary not found",
+        ],
+        404
+      );
+    }
+  }
 }
