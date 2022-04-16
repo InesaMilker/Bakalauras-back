@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Clothes extends Model
 {
-  use \Illuminate\Database\Eloquent\Factories\HasFactory;
+  use HasFactory;
 
-  protected $guarded = ["id"];
+  protected $fillable = ["state", "text", "user_id"];
 
   public function outfits()
   {

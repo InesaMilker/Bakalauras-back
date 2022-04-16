@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Outfit;
 use App\Models\Clothes;
 
 use Illuminate\Http\Request;
