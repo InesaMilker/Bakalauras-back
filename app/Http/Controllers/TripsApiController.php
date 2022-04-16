@@ -18,7 +18,8 @@ class TripsApiController extends Controller
       $user_id = auth()->user()->id;
       return Trips::where("user_id", $user_id)
         ->get()
-        ->sortByDesc("start_date");
+        ->sortByDesc("start_date")
+        ->values();
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
     }

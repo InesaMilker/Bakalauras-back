@@ -10,19 +10,35 @@ class ClothesController extends Controller
 {
   public function all()
   {
-    return Clothes::all();
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      return Clothes::where("user_id", $user_id)->get();
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
+    }
   }
 
   public function create(Request $request)
   {
-    // TODO: add validations
+    request()->validate([
+      "state" => "required",
+      "text" => "required",
+    ]);
 
-    $clothes = new Clothes();
-    $clothes->state = $request->get("state");
-    $clothes->text = $request->get("text");
+    $isGuest = auth()->guest();
 
-    $clothes->save();
+    if (!$isGuest) {
+      $clothes = new Clothes();
+      $clothes->state = $request->get("state");
+      $clothes->text = $request->get("text");
 
-    return $clothes;
+      $clothes->save();
+
+      return $clothes;
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
+    }
   }
 }

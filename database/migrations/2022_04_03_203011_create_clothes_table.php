@@ -17,6 +17,12 @@ class CreateClothesTable extends Migration
       $table->id();
       $table->boolean("state")->default(0);
       $table->string("text");
+      $table->foreignId("user_id");
+      $table
+        ->foreign("user_id")
+        ->references("id")
+        ->on("users")
+        ->onDelete("cascade");
       $table->timestamps();
     });
   }
