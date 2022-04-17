@@ -17,6 +17,7 @@ class CoordinatesApiController extends Controller
   {
     request()->validate([
       "location_name" => "required",
+      "place_id" => "required",
       "lat" => "required",
       "lng" => "required",
       "day_id" => "required",
@@ -32,6 +33,7 @@ class CoordinatesApiController extends Controller
             "lat" => request("lat"),
             "lng" => request("lng"),
             "location_name" => request("location_name"),
+            "place_id" => request("place_id"),
             "day_id" => request("day_id"),
             "user_id" => $user_id,
           ]);
@@ -62,6 +64,9 @@ class CoordinatesApiController extends Controller
         $cordinates->location_name = is_null($request->location_name)
           ? $cordinates->location_name
           : $request->location_name;
+        $cordinates->place_id = is_null($request->place_id)
+          ? $cordinates->place_id
+          : $request->place_id;
         $cordinates->day_id = $cordinates->day_id;
         $cordinates->user_id = $cordinates->user_id;
         $cordinates->save();
