@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use App\Models\Clothes;
 use App\Models\Outfit;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,17 @@ class OutfitsApiController extends Controller
 
   public function store(Request $request)
   {
+    $myValues = $request->get("clothes");
+
+    $results = Clothes::whereIn("id", $myValues)->count();
+
+    if ($results !== count($myValues)) {
+      return response()->json(
+        ["message" => "Some clothes items do not exist"],
+        404
+      );
+    }
+
     request()->validate([
       "outfit_name" => "required",
       "outfit_image" => "required",
@@ -86,15 +99,14 @@ class OutfitsApiController extends Controller
   public function destroy($id)
   {
     $isGuest = auth()->guest();
-
+    $outfit = Outfit::find($id);
+    $outfit->clothes()->detach($id);
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
 
       if (Outfit::where("id", $id)->exists()) {
-        $outfit = Outfit::find($id);
-
-        if ($user_id == $outfit->user_id || $user_role == 1) {
+        if ($user_id == $outfit->user_id) {
+          $outfit->clothes()->detach();
           $outfit->delete();
 
           return response()->json(["message" => "outfit deleted"], 202);
@@ -109,18 +121,22 @@ class OutfitsApiController extends Controller
     }
   }
 
-  public function wanted($id)
+  public function wantedOutfitWithClothes($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
       $outfit = Outfit::find($id);
 
-      if ($user_id == $outfit->user_id || $user_role == 1) {
+      if ($user_id == $outfit->user_id) {
         if (Outfit::where("id", $id)->exists()) {
-          return Outfit::find($id);
+          $result = DB::table("clothes_outfits")
+            ->where("outfit_id", $id)
+            ->pluck("clothes_id");
+
+          $clothes = Clothes::whereIn("id", $result)->get();
+          return $clothes;
         } else {
           return response()->json(
             [

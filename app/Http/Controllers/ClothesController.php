@@ -86,6 +86,7 @@ class ClothesController extends Controller
         $clothes = Clothes::find($id);
 
         if ($user_id == $clothes->user_id) {
+          $clothes->outfits()->detach();
           $clothes->delete();
 
           return response()->json(["message" => "Clothes item deleted"], 202);
