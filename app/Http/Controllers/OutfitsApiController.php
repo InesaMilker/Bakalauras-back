@@ -46,6 +46,13 @@ class OutfitsApiController extends Controller
       return response()->json(["message" => "Unauthorized"], 401);
     }
 
+    if (Outfit::where("outfit_name", request("outfit_name"))->exists()) {
+      return response()->json(
+        ["message" => "Outfit with provided name already exist"],
+        400
+      );
+    }
+
     $user_id = auth()->user()->id;
 
     $image = $request->file("outfit_image");

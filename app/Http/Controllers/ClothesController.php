@@ -25,6 +25,12 @@ class ClothesController extends Controller
       "text" => "required",
     ]);
 
+    if (Clothes::where("text", request("text"))->exists()) {
+      return response()->json(
+        ["message" => "Clothes item with provided name already exist"],
+        400
+      );
+    }
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;
 
