@@ -46,7 +46,11 @@ Route::get("/outfits", [OutfitsApiController::class, "index"]);
 Route::post("/outfits", [OutfitsApiController::class, "store"]);
 Route::put("/outfits/{id}", [OutfitsApiController::class, "update"]);
 Route::delete("/outfits/{id}", [OutfitsApiController::class, "destroy"]);
-Route::get("/outfits/{id}", [OutfitsApiController::class, "wanted"]);
+Route::get("/outfit/{id}", [OutfitsApiController::class, "wantedOutfit"]);
+Route::get("/outfitClothes/{id}", [
+  OutfitsApiController::class,
+  "wantedOutfitClothes",
+]);
 
 Route::get("/diary", [DiaryApiController::class, "index"]);
 Route::post("/diary", [DiaryApiController::class, "store"]);
