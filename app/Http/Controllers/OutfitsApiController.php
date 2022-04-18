@@ -121,7 +121,7 @@ class OutfitsApiController extends Controller
     }
   }
 
-  public function wantedOutfitWithClothes($id)
+  public function wanted($id)
   {
     $isGuest = auth()->guest();
 
