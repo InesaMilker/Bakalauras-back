@@ -74,7 +74,7 @@ Route::put("/checklist/{id}", [ChecklistApiController::class, "update"]);
 Route::delete("/checklist/{id}", [ChecklistApiController::class, "destroy"]);
 Route::get("/checklist/{id}", [ChecklistApiController::class, "wanted"]);
 
-Route::post("/diary/{id}/image", [ImagesApiController::class, "store"]);
+Route::post("/image", [ImagesApiController::class, "store"]);
 Route::get("/diary/{id}/images", [DiaryApiController::class, "diaryImages"]);
 Route::delete("/image/{id}", [ImagesApiController::class, "destroy"]);
 

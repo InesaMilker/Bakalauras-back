@@ -190,7 +190,7 @@ class DiaryApiController extends Controller
     }
   }
 
-  public function diaryImage($id)
+  public function diaryImages($id)
   {
     $isGuest = auth()->guest();
 
