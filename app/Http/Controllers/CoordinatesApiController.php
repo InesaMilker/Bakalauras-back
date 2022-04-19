@@ -8,11 +8,6 @@ use Illuminate\Http\Request;
 
 class CoordinatesApiController extends Controller
 {
-  public function index()
-  {
-    return Coordinates::all();
-  }
-
   public function store()
   {
     request()->validate([

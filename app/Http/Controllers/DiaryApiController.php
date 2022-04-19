@@ -3,25 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diary;
+use App\Models\Images;
 use Illuminate\Http\Request;
 use App\Models\Trips;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class DiaryApiController extends Controller
 {
-  public function index()
-  {
-    $isGuest = auth()->guest();
-
-    if (!$isGuest) {
-      $user_id = auth()->user()->id;
-      return Diary::where("user_id", $user_id)->get();
-    } else {
-      return response()->json(["message" => "Unauthorized"], 401);
-    }
-  }
-
   public function store()
   {
     request()->validate([
@@ -77,12 +64,11 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
 
       if (Diary::where("id", $id)->exists()) {
         $diary = Diary::find($id);
 
-        if ($user_id == $diary->user_id || $user_role == 1) {
+        if ($user_id == $diary->user_id) {
           $diary->title = is_null($request->title)
             ? $diary->title
             : $request->title;
@@ -117,12 +103,11 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
 
       if (Diary::where("id", $id)->exists()) {
         $diary = Diary::find($id);
 
-        if ($user_id == $diary->user_id || $user_role == 1) {
+        if ($user_id == $diary->user_id) {
           $diary->delete();
 
           return response()->json(["message" => "Diary deleted"], 202);
@@ -143,10 +128,9 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
       $diary = Diary::find($id);
 
-      if ($user_id == $diary->user_id || $user_role == 1) {
+      if ($user_id == $diary->user_id) {
         if (Diary::where("id", $id)->exists()) {
           return Diary::find($id);
         } else {
@@ -197,6 +181,37 @@ class DiaryApiController extends Controller
           }
         } else {
           return response()->json(["message" => "Unauthorized"], 401);
+        }
+      } else {
+        return response()->json(["message" => "Unauthorized"], 401);
+      }
+    } else {
+      return response()->json(["message" => "Unauthorized"], 401);
+    }
+  }
+
+  public function diaryImage($id)
+  {
+    $isGuest = auth()->guest();
+
+    if (!$isGuest) {
+      $user_id = auth()->user()->id;
+      $diary = Diary::find($id);
+
+      if ($user_id == $diary->user_id) {
+        if (Diary::where("id", $id)->exists()) {
+          if (Images::where("diary_id", $id)->exists()) {
+            return response(Images::where("diary_id", $id)->get(), 200);
+          } else {
+            return response()->json(["message" => "Image not found"], 404);
+          }
+        } else {
+          return response()->json(
+            [
+              "message" => "Diary not found",
+            ],
+            404
+          );
         }
       } else {
         return response()->json(["message" => "Unauthorized"], 401);

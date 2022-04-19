@@ -54,10 +54,9 @@ class ChecklistApiController extends Controller
 
       if (!$isGuest) {
         $user_id = auth()->user()->id;
-        $user_role = auth()->user()->role;
         $checklist = Checklist::find($id);
 
-        if ($user_id == $checklist->user_id || $user_role == 1) {
+        if ($user_id == $checklist->user_id) {
           $checklist->state = is_null($request->state)
             ? $checklist->state
             : $request->state;
@@ -92,12 +91,11 @@ class ChecklistApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
 
       if (Checklist::where("id", $id)->exists()) {
         $checklist = Checklist::find($id);
 
-        if ($user_id == $checklist->user_id || $user_role == 1) {
+        if ($user_id == $checklist->user_id) {
           $checklist->delete();
 
           return response()->json(["message" => "Checklist deleted"], 202);
@@ -118,10 +116,9 @@ class ChecklistApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
       $checklist = Checklist::find($id);
 
-      if ($user_id == $checklist->user_id || $user_role == 1) {
+      if ($user_id == $checklist->user_id) {
         if (Checklist::where("id", $id)->exists()) {
           return Checklist::find($id);
         } else {

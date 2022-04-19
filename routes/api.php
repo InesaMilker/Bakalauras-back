@@ -8,6 +8,7 @@ use App\Http\Controllers\TripsApiController;
 use App\Http\Controllers\DayApiController;
 use App\Http\Controllers\ClothesController;
 use App\Http\Controllers\LinksApiController;
+use App\Http\Controllers\ImagesApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,7 +55,6 @@ Route::get("/trips/{trip_id}/diaries/{diary_id}", [
 Route::post("/link", [LinksApiController::class, "store"]);
 Route::get("/link/{id}", [LinksApiController::class, "diaryLink"]);
 
-Route::get("/coordinates", [CoordinatesApiController::class, "index"]);
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);
 Route::put("/coordinates/{id}", [CoordinatesApiController::class, "update"]);
 Route::delete("/coordinates/{id}", [
@@ -73,6 +73,10 @@ Route::post("/trips/{id}/checklist", [ChecklistApiController::class, "store"]);
 Route::put("/checklist/{id}", [ChecklistApiController::class, "update"]);
 Route::delete("/checklist/{id}", [ChecklistApiController::class, "destroy"]);
 Route::get("/checklist/{id}", [ChecklistApiController::class, "wanted"]);
+
+Route::post("/diary/{id}/image", [ImagesApiController::class, "store"]);
+Route::get("/diary/{id}/images", [DiaryApiController::class, "diaryImages"]);
+Route::delete("/image/{id}", [ImagesApiController::class, "destroy"]);
 
 Route::get("/day", [DayApiController::class, "index"]);
 Route::post("/day", [DayApiController::class, "store"]);

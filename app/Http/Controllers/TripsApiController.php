@@ -60,12 +60,11 @@ class TripsApiController extends Controller
 
       if (!$isGuest) {
         $user_id = auth()->user()->id;
-        $user_role = auth()->user()->role;
 
         if (Trips::where("id", $id)->exists()) {
           $trips = Trips::find($id);
 
-          if ($user_id == $trips->user_id || $user_role == 1) {
+          if ($user_id == $trips->user_id) {
             $trips->title = is_null($request->title)
               ? $trips->title
               : $request->title;
@@ -239,16 +238,15 @@ class TripsApiController extends Controller
     }
   }
 
-  public function tripDiaries($id, Diary $diary)
+  public function tripDiaries($id)
   {
     $isGuest = auth()->guest();
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $user_role = auth()->user()->role;
       $trip = Trips::find($id);
 
-      if ($user_id == $trip->user_id || $user_role == 1) {
+      if ($user_id == $trip->user_id) {
         if (Trips::where("id", $id)->exists()) {
           if (Diary::where("trip_id", $id)->exists()) {
             return response(Diary::where("trip_id", $id)->get(), 200);
