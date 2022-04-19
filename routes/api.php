@@ -8,6 +8,7 @@ use App\Http\Controllers\TripsApiController;
 use App\Http\Controllers\DayApiController;
 use App\Http\Controllers\ClothesController;
 use App\Http\Controllers\LinksApiController;
+use App\Http\Controllers\TripLinkApiController;
 use App\Http\Controllers\ImagesApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,9 @@ Route::get("/trips/{trip_id}/diaries/{diary_id}", [
 
 Route::post("/link", [LinksApiController::class, "store"]);
 Route::get("/link/{id}", [LinksApiController::class, "diaryLink"]);
+
+Route::post("/tripLink", [TripLinkApiController::class, "store"]);
+Route::get("/tripLink/{id}", [TripLinkApiController::class, "tripLink"]);
 
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);
 Route::put("/coordinates/{id}", [CoordinatesApiController::class, "update"]);
