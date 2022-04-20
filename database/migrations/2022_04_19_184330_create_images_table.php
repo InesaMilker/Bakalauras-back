@@ -21,6 +21,12 @@ class CreateImagesTable extends Migration
         ->references("id")
         ->on("diaries")
         ->onDelete("cascade");
+      $table->foreignId("trip_id");
+      $table
+        ->foreign("trip_id")
+        ->references("id")
+        ->on("trips")
+        ->onDelete("cascade");
       $table->mediumText("name")->nullable();
       $table->foreignId("user_id");
       $table

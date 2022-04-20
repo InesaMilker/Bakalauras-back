@@ -58,6 +58,10 @@ Route::get("/link/{id}", [LinksApiController::class, "diaryLink"]);
 
 Route::post("/tripLink", [TripLinkApiController::class, "store"]);
 Route::get("/tripLink/{id}", [TripLinkApiController::class, "tripLink"]);
+Route::get("/tripLink/{id}/images", [
+  TripLinkApiController::class,
+  "allPhotos",
+]);
 
 Route::post("/coordinates", [CoordinatesApiController::class, "store"]);
 Route::put("/coordinates/{id}", [CoordinatesApiController::class, "update"]);

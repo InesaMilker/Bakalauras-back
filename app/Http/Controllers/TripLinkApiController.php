@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diary;
+use App\Models\Images;
 use App\Models\TripLinks;
 use App\Models\Trips;
 
@@ -67,6 +68,48 @@ class TripLinkApiController extends Controller
           return response(Diary::where("trip_id", $trip_id)->get(), 200);
         } else {
           return response()->json(["message" => "Diary not found"], 404);
+        }
+      } else {
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
+      }
+    } else {
+      return response()->json(
+        [
+          "message" => "Trip not found",
+        ],
+        404
+      );
+    }
+  }
+
+  public function allPhotos($id)
+  {
+    if (TripLinks::where("link_number", $id)->exists()) {
+      $trip_id = TripLinks::where("link_number", $id)
+        ->get()
+        ->pluck("trip_id");
+
+      if (Trips::where("id", $trip_id)->exists()) {
+        if (Images::where("trip_id", $trip_id)->exists()) {
+          $names = Images::where("trip_id", $trip_id)->pluck("name");
+          foreach ($names as $name) {
+            $data[] = [
+              "original" => "http://127.0.0.1:8000/uploads/$name",
+              "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
+            ];
+          }
+          return $data;
+          return response(
+            Images::where("trip_id", $trip_id)->get(["name"]),
+            200
+          );
+        } else {
+          return response()->json(["message" => "Image not found"], 404);
         }
       } else {
         return response()->json(

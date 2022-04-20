@@ -12,8 +12,10 @@ class ImagesApiController extends Controller
   public function store(Request $request)
   {
     request()->validate([
-      "name" => "required",
+      "name" => "required|mimes:jpg,jpeg,png,bmp,tiff |max:4096",
+      "diary_id" => "required",
     ]);
+
     $isGuest = auth()->guest();
     if (!$isGuest) {
       $user_id = auth()->user()->id;
@@ -27,8 +29,11 @@ class ImagesApiController extends Controller
             time() . rand(1, 3) . "." . $name->getClientOriginalName();
           $name->move(public_path("uploads/"), $filename);
 
+          $trip_id = Diary::where("id", request("diary_id"))->value("trip_id");
+
           return Images::create([
             "diary_id" => request("diary_id"),
+            "trip_id" => $trip_id,
             "name" => $filename,
             "user_id" => $user_id,
           ]);

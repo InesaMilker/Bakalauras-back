@@ -38,7 +38,7 @@ class OutfitsApiController extends Controller
 
     request()->validate([
       "outfit_name" => "required",
-      "outfit_image" => "required",
+      "outfit_image" => "required|mimes:jpg,jpeg,png |max:4096",
       "clothes" => "required|array",
       "clothes.*" => "required|integer|exists:clothes,id",
     ]);
