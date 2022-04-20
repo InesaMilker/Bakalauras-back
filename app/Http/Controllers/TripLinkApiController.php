@@ -103,7 +103,7 @@ class TripLinkApiController extends Controller
               "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
             ];
           }
-          return $data;
+          return response($data, 200);
           return response(
             Images::where("trip_id", $trip_id)->get(["name"]),
             200

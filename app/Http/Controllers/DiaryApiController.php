@@ -201,7 +201,14 @@ class DiaryApiController extends Controller
       if ($user_id == $diary->user_id) {
         if (Diary::where("id", $id)->exists()) {
           if (Images::where("diary_id", $id)->exists()) {
-            return response(Images::where("diary_id", $id)->get(), 200);
+            $names = Images::where("diary_id", $id)->pluck("name");
+            foreach ($names as $name) {
+              $data[] = [
+                "original" => "http://127.0.0.1:8000/uploads/$name",
+                "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
+              ];
+            }
+            return response($data, 200);
           } else {
             return response()->json(["message" => "Image not found"], 404);
           }

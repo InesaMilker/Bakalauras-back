@@ -55,6 +55,7 @@ Route::get("/trips/{trip_id}/diaries/{diary_id}", [
 
 Route::post("/link", [LinksApiController::class, "store"]);
 Route::get("/link/{id}", [LinksApiController::class, "diaryLink"]);
+Route::get("/link/{id}/images", [LinksApiController::class, "diaryPhotos"]);
 
 Route::post("/tripLink", [TripLinkApiController::class, "store"]);
 Route::get("/tripLink/{id}", [TripLinkApiController::class, "tripLink"]);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Links;
 use App\Models\Diary;
+use App\Models\Images;
 
 class LinksApiController extends Controller
 {
@@ -61,6 +62,44 @@ class LinksApiController extends Controller
         ->get()
         ->pluck("diary_id");
       return Diary::where("id", $diary_id)->get()[0];
+    } else {
+      return response()->json(
+        [
+          "message" => "Diary not found",
+        ],
+        404
+      );
+    }
+  }
+
+  public function diaryPhotos($id)
+  {
+    if (Links::where("link_number", $id)->exists()) {
+      $diary_id = Links::where("link_number", $id)
+        ->get()
+        ->pluck("diary_id");
+
+      if (Diary::where("id", $diary_id)->exists()) {
+        if (Images::where("diary_id", $diary_id)->exists()) {
+          $names = Images::where("diary_id", $diary_id)->pluck("name");
+          foreach ($names as $name) {
+            $data[] = [
+              "original" => "http://127.0.0.1:8000/uploads/$name",
+              "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
+            ];
+          }
+          return response($data, 200);
+        } else {
+          return response()->json(["message" => "Image not found"], 404);
+        }
+      } else {
+        return response()->json(
+          [
+            "message" => "Diary not found",
+          ],
+          404
+        );
+      }
     } else {
       return response()->json(
         [
