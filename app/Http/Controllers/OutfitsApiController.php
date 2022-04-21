@@ -38,7 +38,7 @@ class OutfitsApiController extends Controller
 
     request()->validate([
       "outfit_name" => "required",
-      "outfit_image" => "required|mimes:jpg,jpeg,png |max:4096",
+      "outfit_image" => "required|mimes:jpg,jpeg,png,gif |max:4096",
       "clothes" => "required|array",
       "clothes.*" => "required|integer|exists:clothes,id",
     ]);
@@ -159,6 +159,59 @@ class OutfitsApiController extends Controller
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
+    }
+  }
+
+  public function detachItem($outfit_id, $clothes_id)
+  {
+    if (Outfit::where("id", $outfit_id)->exists()) {
+      $outfit = Outfit::find($outfit_id);
+      if (Clothes::where("id", $clothes_id)->exists()) {
+        $outfit->clothes()->detach($clothes_id);
+        return response()->json(["message" => "Clothes item detached"], 202);
+      } else {
+        return response()->json(
+          [
+            "message" => "Clothes item not found",
+          ],
+          404
+        );
+      }
+    } else {
+      return response()->json(
+        [
+          "message" => "Outfit not found",
+        ],
+        404
+      );
+    }
+  }
+
+  public function attachItem($outfit_id, Request $request)
+  {
+    if (Outfit::where("id", $outfit_id)->exists()) {
+      $outfit = Outfit::find($outfit_id);
+      $myValues = $request->get("clothes");
+
+      $results = Clothes::whereIn("id", $myValues)->count();
+
+      if ($results !== count($myValues)) {
+        return response()->json(
+          ["message" => "Some clothes items do not exist"],
+          404
+        );
+      }
+
+      $outfit->clothes()->attach($request->get("clothes"));
+
+      return response()->json(["message" => "Clothes items attached"], 202);
+    } else {
+      return response()->json(
+        [
+          "message" => "Outfit not found",
+        ],
+        404
+      );
     }
   }
 }

@@ -38,6 +38,11 @@ Route::post("/outfits", [OutfitsApiController::class, "store"]);
 Route::put("/outfits/{id}", [OutfitsApiController::class, "update"]);
 Route::delete("/outfits/{id}", [OutfitsApiController::class, "destroy"]);
 Route::get("/outfit/{id}", [OutfitsApiController::class, "wantedOutfit"]);
+Route::delete("/outfit/{outfit_id}/clothes/{clothes_id}", [
+  OutfitsApiController::class,
+  "detachItem",
+]);
+Route::post("/outfit/{id}", [OutfitsApiController::class, "attachItem"]);
 Route::get("/outfitClothes/{id}", [
   OutfitsApiController::class,
   "wantedOutfitClothes",

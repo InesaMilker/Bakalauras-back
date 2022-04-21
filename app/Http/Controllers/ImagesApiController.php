@@ -12,7 +12,7 @@ class ImagesApiController extends Controller
   public function store(Request $request)
   {
     request()->validate([
-      "name" => "required|mimes:jpg,jpeg,png,bmp,tiff |max:4096",
+      "name" => "required|mimes:jpg,jpeg,png,gif |max:4096",
       "diary_id" => "required",
     ]);
 
