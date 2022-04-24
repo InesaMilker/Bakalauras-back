@@ -81,11 +81,15 @@ class LinksApiController extends Controller
 
       if (Diary::where("id", $diary_id)->exists()) {
         if (Images::where("diary_id", $diary_id)->exists()) {
-          $names = Images::where("diary_id", $diary_id)->pluck("name");
-          foreach ($names as $name) {
+          $images = Images::where("diary_id", $diary_id)->get();
+          foreach ($images as $image) {
+            $name = $image->name;
+            $image_id = $image->id;
             $data[] = [
               "original" => "http://127.0.0.1:8000/uploads/$name",
               "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
+              "name" => $name,
+              "id" => $image_id,
             ];
           }
           return response($data, 200);

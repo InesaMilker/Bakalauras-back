@@ -201,11 +201,15 @@ class DiaryApiController extends Controller
       if ($user_id == $diary->user_id) {
         if (Diary::where("id", $id)->exists()) {
           if (Images::where("diary_id", $id)->exists()) {
-            $names = Images::where("diary_id", $id)->pluck("name");
-            foreach ($names as $name) {
+            $images = Images::where("diary_id", $id)->get();
+            foreach ($images as $image) {
+              $name = $image->name;
+              $image_id = $image->id;
               $data[] = [
                 "original" => "http://127.0.0.1:8000/uploads/$name",
                 "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
+                "name" => $name,
+                "id" => $image_id,
               ];
             }
             return response($data, 200);

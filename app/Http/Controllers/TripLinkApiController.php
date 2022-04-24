@@ -96,9 +96,10 @@ class TripLinkApiController extends Controller
 
       if (Trips::where("id", $trip_id)->exists()) {
         if (Images::where("trip_id", $trip_id)->exists()) {
-          $names = Images::where("trip_id", $trip_id)->pluck("name");
-          $image_id = Images::where("trip_id", $trip_id)->pluck("id");
-          foreach ($names as $name) {
+          $images = Images::where("trip_id", $trip_id)->get();
+          foreach ($images as $image) {
+            $name = $image->name;
+            $image_id = $image->id;
             $data[] = [
               "original" => "http://127.0.0.1:8000/uploads/$name",
               "thumbnail" => "http://127.0.0.1:8000/uploads/$name",
