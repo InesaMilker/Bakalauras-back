@@ -7,6 +7,7 @@ use App\Models\Clothes;
 use App\Models\Outfit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class OutfitsApiController extends Controller
 {
@@ -36,12 +37,16 @@ class OutfitsApiController extends Controller
       );
     }
 
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "outfit_name" => "required",
       "outfit_image" => "required|mimes:jpg,jpeg,png,gif |max:4096",
       "clothes" => "required|array",
       "clothes.*" => "required|integer|exists:clothes,id",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     if (auth()->guest()) {
       return response()->json(["message" => "Unauthorized"], 401);

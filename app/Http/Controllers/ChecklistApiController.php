@@ -6,6 +6,7 @@ use App\Models\Checklist;
 use App\Models\Trips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ChecklistApiController extends Controller
 {
@@ -23,7 +24,13 @@ class ChecklistApiController extends Controller
 
   public function store($id)
   {
-    request()->validate(["text" => "required"]);
+    $validator = Validator::make(request()->all(), [
+      "text" => "required",
+    ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
 

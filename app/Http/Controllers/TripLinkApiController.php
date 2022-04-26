@@ -6,14 +6,19 @@ use App\Models\Diary;
 use App\Models\Images;
 use App\Models\TripLinks;
 use App\Models\Trips;
+use Illuminate\Support\Facades\Validator;
 
 class TripLinkApiController extends Controller
 {
   public function store()
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "trip_id" => "required",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;

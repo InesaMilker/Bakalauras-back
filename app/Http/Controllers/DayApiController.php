@@ -6,6 +6,7 @@ use App\Models\Coordinates;
 use App\Models\Day;
 use App\Models\Trips;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DayApiController extends Controller
 {
@@ -23,12 +24,16 @@ class DayApiController extends Controller
 
   public function store()
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "day_number" => "required",
       "trip_id" => "required",
       "budget" => "required",
       "note" => "required",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;

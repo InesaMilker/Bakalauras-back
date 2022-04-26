@@ -5,20 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Links;
 use App\Models\Diary;
 use App\Models\Images;
+use Illuminate\Support\Facades\Validator;
 
 class LinksApiController extends Controller
 {
   public function store()
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "diary_id" => "required",
     ]);
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
-    $user_id = auth()->user()->id;
 
     if (!$isGuest) {
       if (Diary::where("id", request("diary_id"))->exists()) {
+        $user_id = auth()->user()->id;
+
         if (
           Diary::where("id", request("diary_id"))->first()->user_id == $user_id
         ) {

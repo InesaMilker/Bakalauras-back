@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Clothes;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ClothesController extends Controller
 {
@@ -21,9 +22,13 @@ class ClothesController extends Controller
 
   public function create(Request $request)
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "text" => "required",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     if (Clothes::where("text", request("text"))->exists()) {
       return response()->json(

@@ -5,18 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Coordinates;
 use App\Models\Day;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CoordinatesApiController extends Controller
 {
   public function store()
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "location_name" => "required",
       "place_id" => "required",
       "lat" => "required",
       "lng" => "required",
       "day_id" => "required",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
     $user_id = auth()->user()->id;

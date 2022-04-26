@@ -6,15 +6,19 @@ use App\Models\Images;
 use App\Models\Diary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class ImagesApiController extends Controller
 {
   public function store(Request $request)
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "name" => "required|mimes:jpg,jpeg,png,gif |max:4096",
       "diary_id" => "required",
     ]);
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
     if (!$isGuest) {

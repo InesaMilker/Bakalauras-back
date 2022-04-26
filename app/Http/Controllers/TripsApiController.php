@@ -8,6 +8,7 @@ use App\Models\Diary;
 use App\Models\Trips;
 use Illuminate\Http\Request;
 use DateTime;
+use Illuminate\Support\Facades\Validator;
 
 class TripsApiController extends Controller
 {
@@ -28,12 +29,16 @@ class TripsApiController extends Controller
 
   public function store()
   {
-    request()->validate([
+    $validator = Validator::make(request()->all(), [
       "title" => "required",
       "start_date" => "required",
       "end_date" => "required",
       "place_id" => "required",
     ]);
+
+    if ($validator->fails()) {
+      return $validator->errors();
+    }
 
     $isGuest = auth()->guest();
 
