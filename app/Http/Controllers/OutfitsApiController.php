@@ -40,7 +40,7 @@ class OutfitsApiController extends Controller
     $validator = Validator::make(request()->all(), [
       "outfit_name" => "required",
       "outfit_image" => "required|mimes:jpg,jpeg,png,gif |max:4096",
-      "clothes" => "required|array",
+      "clothes" => "required|array|min:2",
       "clothes.*" => "required|integer|exists:clothes,id",
     ]);
 
