@@ -34,6 +34,11 @@ class OutfitTest extends TestCase
     $outfit = Outfit::factory()
       ->count(10)
       ->for($this->user, "user")
+      ->has(
+        Clothes::factory()
+          ->count(2)
+          ->for($this->user, "user")
+      )
       ->create();
 
     $response = $this->get($this->resource);
@@ -47,6 +52,7 @@ class OutfitTest extends TestCase
   {
     $clothes = Clothes::factory()
       ->count(3)
+      ->for($this->user, "user")
       ->create();
 
     $payload = [

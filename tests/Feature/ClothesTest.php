@@ -31,6 +31,7 @@ class ClothesTest extends TestCase
   {
     $clothes = Clothes::factory()
       ->count(10)
+      ->for($this->user, "user")
       ->create();
 
     $response = $this->get($this->resource);
@@ -43,7 +44,6 @@ class ClothesTest extends TestCase
   public function test_create()
   {
     $payload = [
-      "state" => 1,
       "text" => "Baseball cap",
     ];
 

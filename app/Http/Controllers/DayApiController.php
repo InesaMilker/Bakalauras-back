@@ -97,31 +97,6 @@ class DayApiController extends Controller
     }
   }
 
-  public function destroy($id)
-  {
-    $isGuest = auth()->guest();
-
-    if (!$isGuest) {
-      $user_id = auth()->user()->id;
-
-      if (Day::where("id", $id)->exists()) {
-        $day = Day::find($id);
-
-        if ($user_id == $day->user_id) {
-          $day->delete();
-
-          return response()->json(["message" => "Day deleted"], 202);
-        } else {
-          return response()->json(["message" => "Unauthorized"], 401);
-        }
-      } else {
-        return response()->json(["message" => "Day not found"], 404);
-      }
-    } else {
-      return response()->json(["message" => "Unauthorized"], 401);
-    }
-  }
-
   public function wanted($id)
   {
     $isGuest = auth()->guest();

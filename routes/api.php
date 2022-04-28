@@ -52,7 +52,6 @@ Route::get("/diary", [DiaryApiController::class, "index"]);
 Route::post("/diary", [DiaryApiController::class, "store"]);
 Route::put("/diary/{id}", [DiaryApiController::class, "update"]);
 Route::delete("/diary/{id}", [DiaryApiController::class, "destroy"]);
-Route::get("/diary/{id}", [DiaryApiController::class, "wanted"]);
 Route::get("/trips/{trip_id}/diaries/{diary_id}", [
   DiaryApiController::class,
   "tripDiariesSingle",
