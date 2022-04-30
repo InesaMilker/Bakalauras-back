@@ -6,7 +6,7 @@ use App\Models\Clothes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ClothesController extends Controller
+class ClothesApiController extends Controller
 {
   public function all()
   {

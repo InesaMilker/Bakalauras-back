@@ -61,8 +61,8 @@ class User extends Authenticatable implements JWTSubject
     ];
   }
 
-  public function outfits()
-  {
-    return $this->hasMany(Outfit::class, "user_id", "id");
-  }
+  // public function outfits()
+  // {
+  //   return $this->hasMany(Outfit::class, "user_id", "id");
+  // }
 }

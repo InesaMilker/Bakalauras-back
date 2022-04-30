@@ -9,4 +9,14 @@ class Images extends Model
 {
   use HasFactory;
   protected $fillable = ["name", "user_id", "diary_id", "trip_id"];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, "user_id", "id");
+  }
+
+  public function diary()
+  {
+    return $this->belongsTo(Diary::class, "diary_id", "id");
+  }
 }

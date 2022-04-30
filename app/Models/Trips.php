@@ -13,7 +13,12 @@ class Trips extends Model
     "start_date",
     "end_date",
     "rating",
-    "user_id",
     "place_id",
+    "user_id",
   ];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, "user_id", "id");
+  }
 }

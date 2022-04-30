@@ -9,4 +9,13 @@ class Links extends Model
 {
   use HasFactory;
   protected $fillable = ["link_number", "diary_id", "user_id"];
+  public function user()
+  {
+    return $this->belongsTo(User::class, "user_id", "id");
+  }
+
+  public function diary()
+  {
+    return $this->belongsTo(Diary::class, "diary_id", "id");
+  }
 }

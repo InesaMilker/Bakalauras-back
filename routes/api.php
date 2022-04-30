@@ -6,7 +6,7 @@ use App\Http\Controllers\DiaryApiController;
 use App\Http\Controllers\OutfitsApiController;
 use App\Http\Controllers\TripsApiController;
 use App\Http\Controllers\DayApiController;
-use App\Http\Controllers\ClothesController;
+use App\Http\Controllers\ClothesApiController;
 use App\Http\Controllers\LinksApiController;
 use App\Http\Controllers\TripLinkApiController;
 use App\Http\Controllers\ImagesApiController;
@@ -76,10 +76,10 @@ Route::delete("/coordinates/{id}", [
 ]);
 Route::get("/coordinates/{id}", [CoordinatesApiController::class, "wanted"]);
 
-Route::get("/clothes", [ClothesController::class, "all"]);
-Route::post("/clothes", [ClothesController::class, "create"]);
-Route::put("/clothes/{id}", [ClothesController::class, "update"]);
-Route::delete("/clothes/{id}", [ClothesController::class, "destroy"]);
+Route::get("/clothes", [ClothesApiController::class, "all"]);
+Route::post("/clothes", [ClothesApiController::class, "create"]);
+Route::put("/clothes/{id}", [ClothesApiController::class, "update"]);
+Route::delete("/clothes/{id}", [ClothesApiController::class, "destroy"]);
 
 Route::get("/checklist", [ChecklistApiController::class, "index"]);
 Route::post("/trips/{id}/checklist", [ChecklistApiController::class, "store"]);

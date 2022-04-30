@@ -16,4 +16,13 @@ class Coordinates extends Model
     "day_id",
     "user_id",
   ];
+  public function user()
+  {
+    return $this->belongsTo(User::class, "user_id", "id");
+  }
+
+  public function day()
+  {
+    return $this->belongsTo(Day::class, "day_id", "id");
+  }
 }
