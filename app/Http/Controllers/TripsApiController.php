@@ -66,89 +66,87 @@ class TripsApiController extends Controller
 
       if (!$isGuest) {
         $user_id = auth()->user()->id;
+        $trips = Trips::find($id);
 
-        if (Trips::where("id", $id)->exists()) {
-          $trips = Trips::find($id);
-          if (!(is_null($request->start_date) && is_null($request->end_date))) {
-            $start_old = $trips->start_date;
-            $start_new = $request->start_date;
-            $datetime1_start = new DateTime($start_old);
-            $datetime2_start = new DateTime($start_new);
-            $interval_start = $datetime1_start->diff($datetime2_start);
+        if (!(is_null($request->start_date) && is_null($request->end_date))) {
+          $start_old = $trips->start_date;
+          $start_new = $request->start_date;
+          $datetime1_start = new DateTime($start_old);
+          $datetime2_start = new DateTime($start_new);
+          $interval_start = $datetime1_start->diff($datetime2_start);
 
-            if ($interval_start->invert == "1") {
-              $old_start_days = Day::where("trip_id", $id)->get();
-              foreach ($old_start_days as $old_day) {
-                $old_day->day_number =
-                  $old_day->day_number + $interval_start->days;
-                $old_day->save();
-              }
+          if ($interval_start->invert == "1") {
+            $old_start_days = Day::where("trip_id", $id)->get();
+
+            foreach ($old_start_days as $old_day) {
+              $old_day->day_number =
+                $old_day->day_number + $interval_start->days;
+              $old_day->save();
             }
+          }
 
-            if (
-              $interval_start->invert == "0" &&
-              $interval_start->days != "0"
-            ) {
-              $old_start_days = Day::where("trip_id", $id)->get();
-              foreach ($old_start_days as $old_day) {
-                if ($old_day->day_number - $interval_start->days <= 0) {
-                  $old_day->delete();
-                  return;
-                }
-                $old_day->day_number =
-                  $old_day->day_number - $interval_start->days;
-                $old_day->save();
+          if ($interval_start->invert == "0" && $interval_start->days != "0") {
+            $old_start_days = Day::where("trip_id", $id)->get();
+
+            foreach ($old_start_days as $old_day) {
+              if ($old_day->day_number - $interval_start->days <= 0) {
+                $old_day->delete();
+                return;
               }
+
+              $old_day->day_number =
+                $old_day->day_number - $interval_start->days;
+              $old_day->save();
             }
+          }
 
-            $end_old = $trips->end_date;
-            $end_new = $request->end_date;
-            $datetime1_end = new DateTime($end_old);
-            $datetime2_end = new DateTime($end_new);
-            $interval_end = $datetime1_end->diff($datetime2_end);
+          $end_old = $trips->end_date;
+          $end_new = $request->end_date;
+          $datetime1_end = new DateTime($end_old);
+          $datetime2_end = new DateTime($end_new);
+          $interval_end = $datetime1_end->diff($datetime2_end);
 
-            $interval_of_new_dates = $datetime2_start->diff($datetime2_end);
+          $interval_of_new_dates = $datetime2_start->diff($datetime2_end);
 
-            if ($interval_end->invert == "1") {
-              $old_end_days = Day::where("trip_id", $id)->get();
-              foreach ($old_end_days as $old_day) {
-                if (
-                  $old_day->day_number - ($interval_of_new_dates->days + 1) >
-                  0
-                ) {
-                  $old_day->delete();
-                }
+          if ($interval_end->invert == "1") {
+            $old_end_days = Day::where("trip_id", $id)->get();
+
+            foreach ($old_end_days as $old_day) {
+              if (
+                $old_day->day_number - ($interval_of_new_dates->days + 1) >
+                0
+              ) {
+                $old_day->delete();
               }
             }
           }
-          if ($user_id == $trips->user_id) {
-            $trips->title = is_null($request->title)
-              ? $trips->title
-              : $request->title;
-            $trips->start_date = is_null($request->start_date)
-              ? $trips->start_date
-              : $request->start_date;
-            $trips->end_date = is_null($request->end_date)
-              ? $trips->end_date
-              : $request->end_date;
-            $trips->rating = is_null($request->rating)
-              ? $trips->rating
-              : $request->rating;
-            $trips->place_id = is_null($request->place_id)
-              ? $trips->place_id
-              : $request->place_id;
-            $trips->user_id = $trips->user_id;
-            $trips->save();
+        }
 
-            return response()->json(
-              ["message" => "Trip updated successfully", "outfit" => $trips],
-              200
-            );
-          } else {
-            return response()->json(["message" => "Unauthorized"], 401);
-          }
+        if ($user_id == $trips->user_id) {
+          $trips->title = is_null($request->title)
+            ? $trips->title
+            : $request->title;
+          $trips->start_date = is_null($request->start_date)
+            ? $trips->start_date
+            : $request->start_date;
+          $trips->end_date = is_null($request->end_date)
+            ? $trips->end_date
+            : $request->end_date;
+          $trips->rating = is_null($request->rating)
+            ? $trips->rating
+            : $request->rating;
+          $trips->place_id = is_null($request->place_id)
+            ? $trips->place_id
+            : $request->place_id;
+          $trips->user_id = $trips->user_id;
+          $trips->save();
+
+          return response()->json(
+            ["message" => "Trip updated successfully", "outfit" => $trips],
+            200
+          );
         } else {
-          return response()->json(["message" => "Trip not found"], 404);
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
         return response()->json(["message" => "Unauthorized"], 401);

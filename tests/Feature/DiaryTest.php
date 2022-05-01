@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Diary;
+use App\Models\Images;
 use App\Models\Trips;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -46,6 +47,22 @@ class DiaryTest extends TestCase
     $response->assertJson($diary->toArray());
   }
 
+  public function test_delete()
+  {
+    $trip = Trips::factory()
+      ->for($this->user, "user")
+      ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $diary = Diary::factory()
+      ->for($this->user, "user")
+      ->for($trip, "trips")
+      ->create(["date" => "2021-01-03"]);
+
+    $response = $this->delete("$this->resource/$diary->id");
+
+    $response->assertStatus(202);
+  }
+
   public function test_store()
   {
     $trips = Trips::factory()
@@ -63,6 +80,7 @@ class DiaryTest extends TestCase
 
     $response->assertStatus(201);
     $response->assertJsonFragment($payload);
+
     $this->assertDatabaseHas((new Diary())->getTable(), [
       "title" => $payload["title"],
       "content" => $payload["content"],
@@ -71,5 +89,28 @@ class DiaryTest extends TestCase
       "user_id" => $this->user->id,
     ]);
     $this->assertDatabaseHas((new Diary())->getTable(), $payload);
+  }
+
+  public function test_get_diary_images()
+  {
+    $trip = Trips::factory()
+      ->for($this->user, "user")
+      ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $diary = Diary::factory()
+      ->for($this->user, "user")
+      ->for($trip, "trips")
+      ->create(["date" => "2021-01-03"]);
+
+    Images::factory()
+      ->count(10)
+      ->for($this->user, "user")
+      ->for($diary, "diary")
+      ->for($trip, "trips")
+      ->create();
+
+    $response = $this->get("/api/diary/$diary->id/images");
+
+    $response->assertStatus(200);
   }
 }

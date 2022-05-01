@@ -41,6 +41,17 @@ class ClothesTest extends TestCase
     $response->assertJson($clothes->toArray());
   }
 
+  public function test_delete()
+  {
+    $clothes = Clothes::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $response = $this->delete("$this->resource/$clothes->id");
+
+    $response->assertStatus(202);
+  }
+
   public function test_create()
   {
     $payload = [

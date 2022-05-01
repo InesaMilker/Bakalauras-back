@@ -68,4 +68,38 @@ class ChecklistTest extends TestCase
     ]);
     $this->assertDatabaseHas((new Checklist())->getTable(), $payload);
   }
+
+  public function test_get_single()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $checklist = Checklist::factory()
+      ->for($this->user, "user")
+      ->for($trips, "trips")
+      ->create();
+
+    $response = $this->get("$this->resource/$checklist->id");
+
+    $response->assertStatus(200);
+
+    $response->assertJson($checklist->toArray());
+  }
+
+  public function test_delete()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $checklist = Checklist::factory()
+      ->for($this->user, "user")
+      ->for($trips, "trips")
+      ->create();
+
+    $response = $this->delete("$this->resource/$checklist->id");
+
+    $response->assertStatus(202);
+  }
 }

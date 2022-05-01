@@ -80,4 +80,20 @@ class OutfitTest extends TestCase
       ]);
     }
   }
+
+  public function test_delete()
+  {
+    $outfit = Outfit::factory()
+      ->for($this->user, "user")
+      ->has(
+        Clothes::factory()
+          ->count(2)
+          ->for($this->user, "user")
+      )
+      ->create();
+
+    $response = $this->delete("$this->resource/$outfit->id");
+
+    $response->assertStatus(202);
+  }
 }

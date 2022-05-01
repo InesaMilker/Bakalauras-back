@@ -19,4 +19,8 @@ class Images extends Model
   {
     return $this->belongsTo(Diary::class, "diary_id", "id");
   }
+  public function trips()
+  {
+    return $this->belongsTo(Trips::class, "trip_id", "id");
+  }
 }
