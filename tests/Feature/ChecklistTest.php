@@ -102,4 +102,26 @@ class ChecklistTest extends TestCase
 
     $response->assertStatus(202);
   }
+
+  public function test_update()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $checklist = Checklist::factory()
+      ->for($this->user, "user")
+      ->for($trips, "trips")
+      ->create();
+
+    $payload = [
+      "state" => "1",
+    ];
+
+    $response = $this->put("$this->resource/$checklist->id", $payload);
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment($payload);
+    $this->assertDatabaseHas((new Checklist())->getTable(), $payload);
+  }
 }

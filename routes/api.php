@@ -94,7 +94,6 @@ Route::delete("/image/{id}", [ImagesApiController::class, "destroy"]);
 Route::get("/day", [DayApiController::class, "index"]);
 Route::post("/day", [DayApiController::class, "store"]);
 Route::put("/day/{id}", [DayApiController::class, "update"]);
-Route::delete("/day/{id}", [DayApiController::class, "destroy"]);
 Route::get("/day/{id}", [DayApiController::class, "wanted"]);
 Route::get("/day/{id}/coordinates", [
   DayApiController::class,

@@ -45,6 +45,9 @@ class TripsTest extends TestCase
 
   public function test_get_wanted()
   {
+    $response = $this->get("$this->resource/15");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create();
@@ -57,6 +60,9 @@ class TripsTest extends TestCase
 
   public function test_delete()
   {
+    $response = $this->delete("$this->resource/5");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create();
@@ -68,6 +74,9 @@ class TripsTest extends TestCase
 
   public function test_get_diaries()
   {
+    $response = $this->get("$this->resource/10/diaries");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -85,6 +94,9 @@ class TripsTest extends TestCase
 
   public function test_get_checklist()
   {
+    $response = $this->get("$this->resource/5/checklist");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create();
@@ -103,6 +115,9 @@ class TripsTest extends TestCase
 
   public function test_get_days()
   {
+    $response = $this->get("$this->resource/15/days");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create();
@@ -114,13 +129,15 @@ class TripsTest extends TestCase
       ->create();
 
     $response = $this->get("$this->resource/$trips->id/days");
-
     $response->assertStatus(200);
     $response->assertJson($day->toArray());
   }
 
   public function test_get_first_diary()
   {
+    $response = $this->get("$this->resource/15/diary");
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -148,6 +165,25 @@ class TripsTest extends TestCase
     $response = $this->post($this->resource, $payload);
 
     $response->assertStatus(201);
+    $response->assertJsonFragment($payload);
+
+    $this->assertDatabaseHas((new Trips())->getTable(), $payload);
+  }
+
+  public function test_update()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $payload = [
+      "title" => "John Doe",
+      "rating" => "5",
+    ];
+
+    $response = $this->put("$this->resource/$trips->id", $payload);
+
+    $response->assertStatus(200);
     $response->assertJsonFragment($payload);
 
     $this->assertDatabaseHas((new Trips())->getTable(), $payload);

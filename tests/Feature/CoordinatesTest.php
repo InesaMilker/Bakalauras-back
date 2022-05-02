@@ -106,4 +106,33 @@ class CoordinatesTest extends TestCase
     ]);
     $this->assertDatabaseHas((new Coordinates())->getTable(), $payload);
   }
+
+  public function test_update()
+  {
+    $trip = Trips::factory()
+      ->for($this->user, "user")
+      ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $day = Day::factory()
+      ->for($this->user, "user")
+      ->for($trip, "trips")
+      ->create();
+
+    $coordinate = Coordinates::factory()
+      ->for($this->user, "user")
+      ->for($day, "day")
+      ->create();
+
+    $payload = [
+      "location_name" => "name of location",
+      "lat" => "5056465.0",
+      "lng" => "56946654.1",
+    ];
+
+    $response = $this->put("$this->resource/$coordinate->id", $payload);
+
+    $response->assertStatus(200);
+
+    $this->assertDatabaseHas((new Coordinates())->getTable(), $payload);
+  }
 }

@@ -113,4 +113,27 @@ class DiaryTest extends TestCase
 
     $response->assertStatus(200);
   }
+
+  public function test_update()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $diary = Diary::factory()
+      ->for($this->user, "user")
+      ->for($trips, "trips")
+      ->create(["date" => "2021-01-03"]);
+
+    $payload = [
+      "title" => "Baseball cap",
+      "content" => "Baseball cap",
+    ];
+
+    $response = $this->put("$this->resource/$diary->id", $payload);
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment($payload);
+    $this->assertDatabaseHas((new Diary())->getTable(), $payload);
+  }
 }

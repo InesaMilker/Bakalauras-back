@@ -187,21 +187,27 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $trips = Trips::find($id);
 
-      if ($user_id == $trips->user_id) {
-        if (Trips::where("id", $id)->exists()) {
+      if (Trips::where("id", $id)->exists()) {
+        $trips = Trips::find($id);
+
+        if ($user_id == $trips->user_id) {
           return Trips::find($id);
         } else {
           return response()->json(
             [
-              "message" => "Trip not found",
+              "message" => "Unauthorized",
             ],
-            404
+            401
           );
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -214,21 +220,21 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $trip = Trips::find($id);
+      if (Trips::where("id", $id)->exists()) {
+        $trip = Trips::find($id);
 
-      if ($user_id == $trip->user_id) {
-        if (Trips::where("id", $id)->exists()) {
+        if ($user_id == $trip->user_id) {
           return response(Checklist::where("trip_id", $id)->get(), 200);
         } else {
-          return response()->json(
-            [
-              "message" => "Trip not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -241,21 +247,21 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $trip = Trips::find($id);
+      if (Trips::where("id", $id)->exists()) {
+        $trip = Trips::find($id);
 
-      if ($user_id == $trip->user_id) {
-        if (Trips::where("id", $id)->exists()) {
+        if ($user_id == $trip->user_id) {
           return response(Day::where("trip_id", $id)->get(), 200);
         } else {
-          return response()->json(
-            [
-              "message" => "Trip not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -268,25 +274,25 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $trip = Trips::find($id);
+      if (Trips::where("id", $id)->exists()) {
+        $trip = Trips::find($id);
 
-      if ($user_id == $trip->user_id) {
-        if (Trips::where("id", $id)->exists()) {
+        if ($user_id == $trip->user_id) {
           if (Diary::where("trip_id", $id)->exists()) {
             return response(Diary::where("trip_id", $id)->get()[0], 200);
           } else {
             return response()->json(["message" => "Diary not found"], 404);
           }
         } else {
-          return response()->json(
-            [
-              "message" => "Trip not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -299,25 +305,25 @@ class TripsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $trip = Trips::find($id);
+      if (Trips::where("id", $id)->exists()) {
+        $trip = Trips::find($id);
 
-      if ($user_id == $trip->user_id) {
-        if (Trips::where("id", $id)->exists()) {
+        if ($user_id == $trip->user_id) {
           if (Diary::where("trip_id", $id)->exists()) {
             return response(Diary::where("trip_id", $id)->get(), 200);
           } else {
             return response()->json(["message" => "Diary not found"], 404);
           }
         } else {
-          return response()->json(
-            [
-              "message" => "Trip not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);

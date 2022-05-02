@@ -58,9 +58,10 @@ class ImagesApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $image = Images::find($id);
 
       if (Images::where("id", $id)->exists()) {
+        $image = Images::find($id);
+
         if ($user_id == $image->user_id) {
           $name = Images::where("id", $id)->value("name");
           $image_path = "uploads/$name";

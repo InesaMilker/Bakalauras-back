@@ -65,4 +65,22 @@ class ClothesTest extends TestCase
 
     $this->assertDatabaseHas((new Clothes())->getTable(), $payload);
   }
+
+  public function test_update()
+  {
+    $payload = [
+      "state" => "1",
+    ];
+
+    $clothes = Clothes::factory()
+      ->for($this->user, "user")
+      ->create();
+
+    $response = $this->put("$this->resource/$clothes->id", $payload);
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment($payload);
+
+    $this->assertDatabaseHas((new Clothes())->getTable(), $payload);
+  }
 }

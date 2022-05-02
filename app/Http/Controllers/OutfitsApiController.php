@@ -82,9 +82,10 @@ class OutfitsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $outfit = Outfit::find($id);
 
       if (Outfit::where("id", $id)->exists()) {
+        $outfit = Outfit::find($id);
+
         if ($user_id == $outfit->user_id) {
           $name = Outfit::where("id", $id)->value("outfit_image");
           $image_path = "uploads/$name";
@@ -115,20 +116,19 @@ class OutfitsApiController extends Controller
     if (!$isGuest) {
       $user_id = auth()->user()->id;
       $outfit = Outfit::find($id);
-
-      if ($user_id == $outfit->user_id) {
-        if (Outfit::where("id", $id)->exists()) {
+      if (Outfit::where("id", $id)->exists()) {
+        if ($user_id == $outfit->user_id) {
           return $outfit;
         } else {
-          return response()->json(
-            [
-              "message" => "Outfit not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Outfit not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -141,10 +141,10 @@ class OutfitsApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $outfit = Outfit::find($id);
+      if (Outfit::where("id", $id)->exists()) {
+        $outfit = Outfit::find($id);
 
-      if ($user_id == $outfit->user_id) {
-        if (Outfit::where("id", $id)->exists()) {
+        if ($user_id == $outfit->user_id) {
           $result = DB::table("clothes_outfits")
             ->where("outfit_id", $id)
             ->pluck("clothes_id");
@@ -152,15 +152,15 @@ class OutfitsApiController extends Controller
           $clothes = Clothes::whereIn("id", $result)->get();
           return $clothes;
         } else {
-          return response()->json(
-            [
-              "message" => "Outfit not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Outfit not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);

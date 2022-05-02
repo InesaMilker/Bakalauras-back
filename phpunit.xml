@@ -4,15 +4,38 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+
     <testsuites>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
+    
     <coverage processUncoveredFiles="true">
         <include>
             <directory suffix=".php">./app</directory>
         </include>
+        <exclude>
+          <directory suffix=".php"> ./app/Library</directory>
+       </exclude>
+        <exclude>
+          <directory suffix=".php"> ./app/Http/Middleware</directory>
+       </exclude>
+        <exclude>
+          <directory suffix=".php"> ./app/Console</directory>
+       </exclude>
+        <exclude>
+          <directory suffix=".php"> ./app/Http/Resources</directory>
+       </exclude>
+        <exclude>
+           <file> ./app/Http/Controllers/LockersController.php</file>
+       </exclude>
+       <exclude>
+           <file> ./app/Providers/BroadcastServiceProvider.php</file>
+       </exclude>
+       <exclude>
+           <file> ./app/Http/Controllers/Controller.php</file>
+       </exclude>
     </coverage>
     <php>
         <server name="APP_ENV" value="testing"/>
@@ -26,3 +49,5 @@
         <server name="TELESCOPE_ENABLED" value="false"/>
     </php>
 </phpunit>
+
+

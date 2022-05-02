@@ -116,4 +116,45 @@ class AuthTest extends TestCase
     $content = json_decode($response->getContent());
     $this->assertEquals($user->id, $content->id);
   }
+
+  public function test_register()
+  {
+    $payload = [
+      "email" => "email@email.com",
+      "password" =>
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+      "password_confirmation" =>
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    ];
+
+    $response = $this->post("/api/auth/register", $payload);
+    $response->assertStatus(400);
+
+    $payload = [
+      "name" => "name",
+      "email" => "email@email.com",
+      "password" =>
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+      "password_confirmation" =>
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    ];
+
+    $response = $this->post("/api/auth/register", $payload);
+    $response->assertStatus(201);
+  }
+
+  public function test_destroy()
+  {
+    /** @var User $user */
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $response = $this->delete("/api/delete");
+    $response->assertStatus(200);
+    $response->assertStatus(200);
+
+    json_decode($response->getContent());
+    // $this->assertEquals($user->id, $content->id);
+  }
 }

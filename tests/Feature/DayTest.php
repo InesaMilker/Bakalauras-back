@@ -115,4 +115,26 @@ class DayTest extends TestCase
     ]);
     $this->assertDatabaseHas((new Day())->getTable(), $payload);
   }
+
+  public function test_update()
+  {
+    $trips = Trips::factory()
+      ->for($this->user, "user")
+      ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $day = Day::factory()
+      ->for($this->user, "user")
+      ->for($trips, "trips")
+      ->create();
+
+    $payload = [
+      "budget" => "200.2",
+      "note" => "hello, this is my note",
+    ];
+
+    $response = $this->put("$this->resource/$day->id", $payload);
+
+    $response->assertStatus(200);
+    $this->assertDatabaseHas((new Day())->getTable(), $payload);
+  }
 }
