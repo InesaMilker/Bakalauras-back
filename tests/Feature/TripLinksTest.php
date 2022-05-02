@@ -31,6 +31,12 @@ class TripLinksTest extends TestCase
 
   public function test_store()
   {
+    $payload = [
+      "trip_id" => "1",
+    ];
+    $response = $this->post($this->resource, $payload);
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create();
@@ -40,7 +46,6 @@ class TripLinksTest extends TestCase
     ];
 
     $response = $this->post($this->resource, $payload);
-
     $response->assertStatus(201);
     $response->assertJsonFragment($payload);
 
@@ -53,11 +58,14 @@ class TripLinksTest extends TestCase
 
   public function test_trip_link()
   {
+    $response = $this->get("$this->resource/1");
+    $response->assertStatus(404);
+
     $trip = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
 
-    $diary = Diary::factory()
+    Diary::factory()
       ->for($this->user, "user")
       ->for($trip, "trips")
       ->create(["date" => "2021-01-03"]);
@@ -68,12 +76,14 @@ class TripLinksTest extends TestCase
       ->create();
 
     $response = $this->get("$this->resource/$tripLink->link_number");
-
     $response->assertStatus(200);
   }
 
   public function test_get_all_photos()
   {
+    $response = $this->get("$this->resource/1/images");
+    $response->assertStatus(404);
+
     $trip = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -96,7 +106,6 @@ class TripLinksTest extends TestCase
       ->create();
 
     $response = $this->get("$this->resource/$link->link_number/images");
-
     $response->assertStatus(200);
   }
 }

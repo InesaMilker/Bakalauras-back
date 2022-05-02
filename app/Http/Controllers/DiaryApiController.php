@@ -133,35 +133,36 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $diary = Diary::find($diary_id);
-      $trip = Trips::find($trip_id);
+      if (Trips::where("id", $trip_id)->exists()) {
+        $trip = Trips::find($trip_id);
 
-      if ($user_id == $diary->user_id) {
-        if ($user_id == $trip->user_id) {
-          if (Trips::where("id", $trip_id)->exists()) {
-            if (Diary::where("id", $diary_id)->exists()) {
+        if (Diary::where("id", $diary_id)->exists()) {
+          $diary = Diary::find($diary_id);
+
+          if ($user_id == $trip->user_id) {
+            if ($user_id == $diary->user_id) {
               return Diary::find($diary_id);
             } else {
-              return response()->json(
-                [
-                  "message" => "Diary not found",
-                ],
-                404
-              );
+              return response()->json(["message" => "Unauthorized"], 401);
             }
           } else {
-            return response()->json(
-              [
-                "message" => "Trip not found",
-              ],
-              404
-            );
+            return response()->json(["message" => "Unauthorized"], 401);
           }
         } else {
-          return response()->json(["message" => "Unauthorized"], 401);
+          return response()->json(
+            [
+              "message" => "Diary not found",
+            ],
+            404
+          );
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Trip not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);
@@ -174,10 +175,10 @@ class DiaryApiController extends Controller
 
     if (!$isGuest) {
       $user_id = auth()->user()->id;
-      $diary = Diary::find($id);
+      if (Diary::where("id", $id)->exists()) {
+        $diary = Diary::find($id);
 
-      if ($user_id == $diary->user_id) {
-        if (Diary::where("id", $id)->exists()) {
+        if ($user_id == $diary->user_id) {
           if (Images::where("diary_id", $id)->exists()) {
             $images = Images::where("diary_id", $id)->get();
             foreach ($images as $image) {
@@ -195,15 +196,15 @@ class DiaryApiController extends Controller
             return response()->json(["message" => "Image not found"], 404);
           }
         } else {
-          return response()->json(
-            [
-              "message" => "Diary not found",
-            ],
-            404
-          );
+          return response()->json(["message" => "Unauthorized"], 401);
         }
       } else {
-        return response()->json(["message" => "Unauthorized"], 401);
+        return response()->json(
+          [
+            "message" => "Diary not found",
+          ],
+          404
+        );
       }
     } else {
       return response()->json(["message" => "Unauthorized"], 401);

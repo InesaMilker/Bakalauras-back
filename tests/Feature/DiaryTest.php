@@ -31,9 +31,15 @@ class DiaryTest extends TestCase
 
   public function test_trip_diaries_single()
   {
+    $response = $this->get("/api/trips/1/diaries/1");
+    $response->assertStatus(404);
+
     $trip = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
+
+    $response = $this->get("/api/trips/$trip->id/diaries/1");
+    $response->assertStatus(404);
 
     $diary = Diary::factory()
       ->for($this->user, "user")
@@ -41,14 +47,15 @@ class DiaryTest extends TestCase
       ->create(["date" => "2021-01-03"]);
 
     $response = $this->get("/api/trips/$trip->id/diaries/$diary->id");
-
     $response->assertStatus(200);
-
     $response->assertJson($diary->toArray());
   }
 
   public function test_delete()
   {
+    $response = $this->delete("$this->resource/1");
+    $response->assertStatus(404);
+
     $trip = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -59,7 +66,6 @@ class DiaryTest extends TestCase
       ->create(["date" => "2021-01-03"]);
 
     $response = $this->delete("$this->resource/$diary->id");
-
     $response->assertStatus(202);
   }
 
@@ -77,7 +83,6 @@ class DiaryTest extends TestCase
     ];
 
     $response = $this->post($this->resource, $payload);
-
     $response->assertStatus(201);
     $response->assertJsonFragment($payload);
 
@@ -93,6 +98,9 @@ class DiaryTest extends TestCase
 
   public function test_get_diary_images()
   {
+    $response = $this->get("/api/diary/10/images");
+    $response->assertStatus(404);
+
     $trip = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -110,12 +118,19 @@ class DiaryTest extends TestCase
       ->create();
 
     $response = $this->get("/api/diary/$diary->id/images");
-
     $response->assertStatus(200);
   }
 
   public function test_update()
   {
+    $payload = [
+      "title" => "Baseball cap",
+      "content" => "Baseball cap",
+    ];
+
+    $response = $this->put("$this->resource/1", $payload);
+    $response->assertStatus(404);
+
     $trips = Trips::factory()
       ->for($this->user, "user")
       ->create(["start_date" => "2020-01-03", "end_date" => "2023-01-03"]);
@@ -131,7 +146,6 @@ class DiaryTest extends TestCase
     ];
 
     $response = $this->put("$this->resource/$diary->id", $payload);
-
     $response->assertStatus(200);
     $response->assertJsonFragment($payload);
     $this->assertDatabaseHas((new Diary())->getTable(), $payload);
