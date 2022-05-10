@@ -28,8 +28,20 @@ class TripLinkApiController extends Controller
         if (
           Trips::where("id", request("trip_id"))->first()->user_id == $user_id
         ) {
+          $new = false;
+
+          while ($new == false) {
+            $randomString = $this->generateRandomString();
+
+            if (TripLinks::where("link_number", $randomString)->exists()) {
+              $randomString = $this->generateRandomString();
+            } else {
+              $new = true;
+            }
+          }
+
           return TripLinks::create([
-            "link_number" => $this->generateRandomString(),
+            "link_number" => $randomString,
             "trip_id" => request("trip_id"),
             "user_id" => $user_id,
           ]);
@@ -46,7 +58,7 @@ class TripLinkApiController extends Controller
 
   public function generateRandomString()
   {
-    $length = 25;
+    $length = 35;
     $characters =
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $charactersLength = strlen($characters);
@@ -54,11 +66,7 @@ class TripLinkApiController extends Controller
     for ($i = 0; $i < $length; $i++) {
       $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    if (TripLinks::where("link_number", $randomString)->exists()) {
-      $this->generateRandomString();
-    } else {
-      return $randomString;
-    }
+    return $randomString;
   }
 
   public function tripLink($id)

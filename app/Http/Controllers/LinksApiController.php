@@ -27,8 +27,20 @@ class LinksApiController extends Controller
         if (
           Diary::where("id", request("diary_id"))->first()->user_id == $user_id
         ) {
+          $new = false;
+
+          while ($new == false) {
+            $randomString = $this->generateRandomString();
+
+            if (Links::where("link_number", $randomString)->exists()) {
+              $randomString = $this->generateRandomString();
+            } else {
+              $new = true;
+            }
+          }
+
           return Links::create([
-            "link_number" => $this->generateRandomString(),
+            "link_number" => $randomString,
             "diary_id" => request("diary_id"),
             "user_id" => $user_id,
           ]);
@@ -53,11 +65,7 @@ class LinksApiController extends Controller
     for ($i = 0; $i < $length; $i++) {
       $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    if (Links::where("link_number", $randomString)->exists()) {
-      $this->generateRandomString();
-    } else {
-      return $randomString;
-    }
+    return $randomString;
   }
 
   public function diaryLink($id)
